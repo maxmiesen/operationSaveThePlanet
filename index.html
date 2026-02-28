@@ -91,6 +91,25 @@
     100% { opacity: 1; transform: translate(-50%, -50%) scale(1.3); }
   }
 
+  .hero-logo {
+    max-width: 200px;
+    height: auto;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 1s 0.2s ease forwards;
+  }
+
+  .hero-title {
+    font-family: var(--mono);
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 1s 0.4s ease forwards;
+  }
+
   .hero-tag {
     font-family: var(--mono);
     font-size: 0.7rem;
@@ -99,7 +118,7 @@
     color: var(--text-muted);
     margin-bottom: 2.5rem;
     opacity: 0;
-    animation: fadeUp 1s 0.3s ease forwards;
+    animation: fadeUp 1s 0.5s ease forwards;
   }
 
   .hero h1 {
@@ -110,7 +129,7 @@
     letter-spacing: -0.03em;
     max-width: 900px;
     opacity: 0;
-    animation: fadeUp 1s 0.6s ease forwards;
+    animation: fadeUp 1s 0.7s ease forwards;
   }
 
   .hero h1 em {
@@ -126,7 +145,7 @@
     margin-top: 2rem;
     font-weight: 300;
     opacity: 0;
-    animation: fadeUp 1s 0.9s ease forwards;
+    animation: fadeUp 1s 1s ease forwards;
   }
 
   .hero-scroll {
@@ -136,7 +155,7 @@
     align-items: center;
     gap: 0.75rem;
     opacity: 0;
-    animation: fadeUp 1s 1.2s ease forwards;
+    animation: fadeUp 1s 1.3s ease forwards;
   }
 
   .hero-scroll span {
@@ -751,6 +770,8 @@
 
 <!-- ████████████████ HERO ████████████████ -->
 <section class="hero" id="hero">
+  <img src="ostp.png" alt="Operation Save The Planet" class="hero-logo">
+  <h2 class="hero-title">OPERATION: SAVE THE PLANET</h2>
   <p class="hero-tag">An interactive chronicle</p>
   <h1>Movements That<br><em>Shaped</em> America</h1>
   <p class="hero-sub">A visual journey through the struggles, leaders, and turning points that redefined justice, equality, and freedom in the United States.</p>
