@@ -728,6 +728,11 @@
 </head>
 <body>
 
+<!-- BACKGROUND MUSIC -->
+<audio id="bg-music" autoplay loop preload="auto" style="display: none;">
+  <source src="MF%20DOOM%20-%20Doomsday%20(feat.%20Pebbles%20The%20Invisible%20Girl)%20%5BOfficial%20Audio%5D.mp3" type="audio/mpeg">
+</audio>
+
 <!-- NAVIGATION DOTS -->
 <nav class="nav-dots" aria-label="Section navigation">
   <button class="nav-dot active" data-section="hero" onclick="scrollToSection('hero')">
@@ -1093,6 +1098,18 @@
 </footer>
 
 <script>
+  // ─── BACKGROUND MUSIC ───
+  (function() {
+    const audio = document.getElementById('bg-music');
+    if (!audio) return;
+    const play = () => { audio.play().catch(() => {}); };
+    play();
+    // Fallback: first user interaction starts playback (browsers block autoplay unless muted)
+    document.addEventListener('click', play, { once: true });
+    document.addEventListener('keydown', play, { once: true });
+    document.addEventListener('touchstart', play, { once: true });
+  })();
+
   // ─── INTERSECTION OBSERVER FOR SCROLL ANIMATIONS ───
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
