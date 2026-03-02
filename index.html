@@ -755,6 +755,61 @@
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   }
 
+  /* ─── ESSAY / CONTENT BLOCKS ─── */
+  .essay-section {
+    max-width: 720px;
+    margin: 5rem auto 4rem;
+  }
+
+  .essay-section-title {
+    font-family: var(--sans);
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    text-align: center;
+    margin-bottom: 3rem;
+    color: var(--text-primary);
+  }
+
+  .essay-section-title em {
+    color: var(--accent-future);
+    font-style: italic;
+    font-weight: 600;
+  }
+
+  .essay-block {
+    margin-bottom: 3rem;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .essay-block.visible { opacity: 1; transform: translateY(0); }
+
+  .essay-block h4 {
+    font-family: var(--sans);
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--accent-future);
+    margin-bottom: 0.75rem;
+  }
+
+  .essay-block p {
+    font-family: var(--serif);
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    font-weight: 400;
+  }
+
+  .essay-block.essay-intro p {
+    font-style: italic;
+    color: var(--text-primary);
+    opacity: 0.95;
+  }
+
   /* ─── RESPONSIVE ─── */
   @media (max-width: 768px) {
     .nav-dots { display: none; }
@@ -1220,6 +1275,89 @@
     </div>
   </div>
 
+  <div class="essay-section">
+    <h3 class="essay-section-title">How Wealth Redistribution in America will change our Country and Improve life for <em>Everyone</em></h3>
+
+    <div class="essay-block">
+      <h4>Redistribution as a Rising Tide</h4>
+      <p>When concentrated wealth is redistributed through progressive taxation and public investment, it doesn't destroy value — it circulates it. Billionaires retain profitable businesses because the foundation of profit is demand, and demand comes from people who have money to spend. A broader consumer base with more purchasing power drives revenue across industries, from small businesses to major corporations. The pie grows rather than shrinks.</p>
+    </div>
+
+    <div class="essay-block">
+      <h4>The Power Rebalancing</h4>
+      <p>Extreme wealth concentration translates directly into outsized political influence — lobbying, campaign financing, media ownership. Reducing that concentration doesn't impoverish the wealthy; it restores democratic balance. When no single actor can buy policy outcomes, governance becomes more responsive to the public interest. This is ultimately healthier for the wealthy too, because stable societies with broad legitimacy protect everyone's long-term interests better than oligarchic ones.</p>
+    </div>
+
+    <div class="essay-block">
+      <h4>The Demand Multiplier</h4>
+      <p>When working and middle-class families have more disposable income, they spend it — on goods, services, housing, education. This spending circulates through local economies far more efficiently than wealth parked in financial instruments. Businesses see higher revenues, hire more workers, and invest in expansion. The billionaire's bottom line benefits from a thriving consumer economy rather than being threatened by it.</p>
+    </div>
+
+    <div class="essay-block">
+      <h4>Stronger Bodies, Sharper Minds</h4>
+      <p>With reduced financial stress, people gain time. Time to exercise, cook nutritious meals, engage with their children's education, and participate in civic life. Health outcomes improve, reducing the burden on emergency healthcare systems. A physically healthier population is a more productive one — fewer sick days, lower insurance costs, longer working lives. This is King's "person-oriented society" in practice.</p>
+    </div>
+
+    <div class="essay-block">
+      <h4>Education Funded by Shared Prosperity</h4>
+      <p>Property taxes fund public schools, which means wealthy districts get well-funded schools while impoverished ones don't. Wealth redistribution breaks this cycle. Better-funded schools across the board produce a more educated workforce, more innovation, more entrepreneurship, and fewer people trapped in cycles of poverty. The return on investment in education compounds across generations.</p>
+    </div>
+
+    <div class="essay-block">
+      <h4>From Defense to Diplomacy</h4>
+      <p>When domestic needs are met — housing, healthcare, education — the political pressure to maintain a massive defense budget shifts. Tax revenue can be repurposed toward humanitarian aid, the Peace Corps, and diplomatic infrastructure. A nation that leads through development rather than military dominance builds more durable alliances and faces fewer security threats. King identified this exact reallocation when he connected militarism to poverty: every dollar spent on weapons is a dollar not spent on human potential.</p>
+    </div>
+
+    <div class="essay-block">
+      <h4>The Feedback Loop</h4>
+      <p>This is the critical insight — it's not a linear chain but a self-reinforcing cycle. Healthier, better-educated people earn more and contribute more in taxes. Stronger local economies generate more business revenue. Reduced inequality lowers crime, healthcare costs, and social instability. Each improvement feeds the next, creating what King envisioned: a society where shared prosperity replaces the zero-sum thinking that keeps the "giant triplets" of racism, materialism, and militarism in power.</p>
+    </div>
+  </div>
+
+  <div class="essay-section">
+    <h3 class="essay-section-title">How Wealth Redistribution in America can lead to ending wars around the <em>world</em></h3>
+
+    <div class="essay-block essay-intro">
+      <p>This is the thread King was pulling on when he connected capitalism, militarism, and racism as structurally inseparable. Here's how the causal logic works:</p>
+    </div>
+
+    <div class="essay-block">
+      <h4>Why Wars Get Started in the First Place</h4>
+      <p>The defense industry is one of the most profitable sectors in the American economy. Lockheed Martin, Raytheon, Northrop Grumman — these companies don't just passively receive contracts, they actively lobby for them. In the current system, concentrated wealth funds lobbying operations that push for military intervention and bloated defense budgets because war is profitable for a very small number of people. Defense contractors spend hundreds of millions annually on lobbying and campaign contributions. The people making the decision to go to war are financially entangled with the people who profit from it. Eisenhower warned about exactly this when he coined "military-industrial complex" in 1961 — and King took that analysis further by naming it as one of the triplets.</p>
+    </div>
+
+    <div class="essay-block">
+      <h4>How Wealth Concentration Sustains the War Machine</h4>
+      <p>When billionaires and defense corporations hold disproportionate political power, they can ensure that federal budgets prioritize military spending over domestic needs. The U.S. spends over $800 billion annually on defense. Meanwhile, the entire federal education budget is a fraction of that. This isn't an accident or a reflection of public preference — polls consistently show Americans want more spent on healthcare and education. It's a reflection of who has power over budget allocation. Concentrated wealth means concentrated influence, and that influence flows toward the investments that generate returns for the wealthy, which includes weapons manufacturing and resource wars.</p>
+    </div>
+
+    <div class="essay-block">
+      <h4>The Redistribution Mechanism</h4>
+      <p>When you redistribute wealth through progressive taxation, you don't just move money around — you move power. If defense contractors and billionaire investors have less capacity to flood political campaigns and lobbying firms with cash, their ability to manufacture consent for war diminishes. Politicians become more responsive to their actual constituents, who overwhelmingly prefer investment in schools, hospitals, and infrastructure over foreign military operations. The democratic feedback loop starts functioning again.</p>
+    </div>
+
+    <div class="essay-block">
+      <h4>Domestic Stability Eliminates the Need for Distraction</h4>
+      <p>There's also a darker mechanism at work. Governments historically use foreign conflict to distract from domestic failures. When people are struggling — unemployed, uninsured, undereducated — foreign enemies become convenient scapegoats. Nationalism fills the void that material security should occupy. But when people are housed, healthy, educated, and employed, the appetite for war drops dramatically. You can't rally people behind a war economy when the peace economy is working for them. Redistribution undercuts the social conditions that make populations receptive to militaristic rhetoric.</p>
+    </div>
+
+    <div class="essay-block">
+      <h4>From Extraction to Investment Abroad</h4>
+      <p>American foreign policy has historically been structured around resource extraction — oil in the Middle East, minerals in Africa and Latin America, trade routes globally. Wars are fought to secure these resources for corporate interests. But when domestic wealth is more equitably distributed and the political system is less captured by extractive industries, foreign policy can shift from "secure resources for corporations" to "build partnerships for mutual development." Humanitarian aid and Peace Corps investment create stable trading partners, educated populations, and functioning markets — which is actually better for long-term American economic interests than extraction through force.</p>
+    </div>
+
+    <div class="essay-block">
+      <h4>The King Framework Applied</h4>
+      <p>This is exactly what King was articulating in his final years. He saw that you couldn't end racism without ending poverty, and you couldn't end poverty without ending militarism, because they all served the same system. The Vietnam War was draining resources that could fund the War on Poverty. Poor Black and white Americans were being sent to kill poor Vietnamese people so that defense contractors could profit. His Poor People's Campaign was designed to unite poor people across racial lines to demand that the federal budget reflect human needs rather than corporate profit.</p>
+    </div>
+
+    <div class="essay-block">
+      <h4>The Chain</h4>
+      <p>Redistribute wealth → reduce plutocratic political influence → democratic budgets reflect public priorities → military spending decreases → humanitarian investment increases → stable international relationships replace extractive ones → fewer wars → freed resources cycle back into domestic and international development.</p>
+      <p>It's not idealistic. It's structural. Remove the profit motive from war, and the wars stop being manufactured. King understood this, which is why the surveillance and suppression intensified after he started talking about capitalism and militarism — not just racism. That was the analysis that threatened the actual power structure.</p>
+    </div>
+  </div>
+
   <div class="cta-row">
     <a href="#hero" class="btn btn-future">Back to Top <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 15l7-7 7 7"/></svg></a>
     <a href="#" class="btn btn-outline">Share This Timeline <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13"/></svg></a>
@@ -1256,13 +1394,19 @@
   }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
 
   document.querySelectorAll(
-    '.section-header, .timeline-card, .quote-block, .figure-card, .stat-item, .section-divider'
+    '.section-header, .timeline-card, .quote-block, .figure-card, .stat-item, .section-divider, .essay-block'
   ).forEach(el => observer.observe(el));
 
   // Stagger figure cards & stat items
   document.querySelectorAll('.figures-grid').forEach(grid => {
     grid.querySelectorAll('.figure-card').forEach((card, i) => {
       card.style.transitionDelay = `${i * 0.12}s`;
+    });
+  });
+
+  document.querySelectorAll('.essay-section').forEach(section => {
+    section.querySelectorAll('.essay-block').forEach((block, i) => {
+      block.style.transitionDelay = `${i * 0.1}s`;
     });
   });
 
