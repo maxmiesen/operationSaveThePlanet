@@ -21,6 +21,8 @@
     --accent-civil-glow: rgba(232, 184, 77, 0.18);
     --accent-feminism: #c77dff;
     --accent-feminism-glow: rgba(199, 125, 255, 0.18);
+    --accent-future: #34d399;
+    --accent-future-glow: rgba(52, 211, 153, 0.18);
     --border: rgba(255, 255, 255, 0.07);
     --serif: 'Source Serif 4', Georgia, serif;
     --sans: 'Syne', -apple-system, sans-serif;
@@ -218,6 +220,7 @@
   .nav-dot[data-section="drugs"].active { border-color: var(--accent-drugs); background: var(--accent-drugs); }
   .nav-dot[data-section="civil"].active { border-color: var(--accent-civil); background: var(--accent-civil); }
   .nav-dot[data-section="feminism"].active { border-color: var(--accent-feminism); background: var(--accent-feminism); }
+  .nav-dot[data-section="future"].active { border-color: var(--accent-future); background: var(--accent-future); }
 
   .nav-dot .tooltip {
     position: absolute;
@@ -325,6 +328,7 @@
   .drugs .section-label { color: var(--accent-drugs); background: var(--accent-drugs-glow); }
   .civil .section-label { color: var(--accent-civil); background: var(--accent-civil-glow); }
   .feminism .section-label { color: var(--accent-feminism); background: var(--accent-feminism-glow); }
+  .future .section-label { color: var(--accent-future); background: var(--accent-future-glow); }
 
   .section-title {
     font-family: var(--sans);
@@ -338,6 +342,7 @@
   .drugs .section-title em { color: var(--accent-drugs); font-style: italic; font-weight: 400; }
   .civil .section-title em { color: var(--accent-civil); font-style: italic; font-weight: 400; }
   .feminism .section-title em { color: var(--accent-feminism); font-style: italic; font-weight: 400; }
+  .future .section-title em { color: var(--accent-future); font-style: italic; font-weight: 400; }
 
   .section-intro {
     font-size: 1.05rem;
@@ -400,6 +405,8 @@
   .civil .timeline-card:hover .node-dot { box-shadow: 0 0 20px var(--accent-civil-glow); }
   .feminism .node-dot { border-color: var(--accent-feminism); }
   .feminism .timeline-card:hover .node-dot { box-shadow: 0 0 20px var(--accent-feminism-glow); }
+  .future .node-dot { border-color: var(--accent-future); }
+  .future .timeline-card:hover .node-dot { box-shadow: 0 0 20px var(--accent-future-glow); }
 
   .card-content {
     background: linear-gradient(135deg, var(--bg-card) 0%, rgba(26,29,33,0.95) 100%);
@@ -427,6 +434,7 @@
   .drugs .card-content::before { background: var(--accent-drugs); }
   .civil .card-content::before { background: var(--accent-civil); }
   .feminism .card-content::before { background: var(--accent-feminism); }
+  .future .card-content::before { background: var(--accent-future); }
 
   .card-content:hover {
     border-color: rgba(255,255,255,0.12);
@@ -446,6 +454,7 @@
   .drugs .card-date { color: var(--accent-drugs); }
   .civil .card-date { color: var(--accent-civil); }
   .feminism .card-date { color: var(--accent-feminism); }
+  .future .card-date { color: var(--accent-future); }
 
   .card-title {
     font-family: var(--sans);
@@ -561,6 +570,7 @@
   .drugs .figure-icon { background: var(--accent-drugs-glow); }
   .civil .figure-icon { background: var(--accent-civil-glow); }
   .feminism .figure-icon { background: var(--accent-feminism-glow); }
+  .future .figure-icon { background: var(--accent-future-glow); }
 
   .figure-name {
     font-family: var(--sans);
@@ -581,6 +591,7 @@
   .drugs .figure-role { color: var(--accent-drugs); }
   .civil .figure-role { color: var(--accent-civil); }
   .feminism .figure-role { color: var(--accent-feminism); }
+  .future .figure-role { color: var(--accent-future); }
 
   .figure-desc {
     font-size: 0.88rem;
@@ -627,6 +638,7 @@
   .drugs .stat-number { color: var(--accent-drugs); }
   .civil .stat-number { color: var(--accent-civil); }
   .feminism .stat-number { color: var(--accent-feminism); }
+  .future .stat-number { color: var(--accent-future); }
 
   .stat-label {
     font-family: var(--mono);
@@ -683,6 +695,8 @@
   .btn-civil:hover { box-shadow: 0 8px 30px rgba(212,168,67,0.3); transform: translateY(-2px); }
   .btn-feminism { background: var(--accent-feminism); color: #fff; }
   .btn-feminism:hover { box-shadow: 0 8px 30px rgba(180,103,224,0.3); transform: translateY(-2px); }
+  .btn-future { background: var(--accent-future); color: #000; }
+  .btn-future:hover { box-shadow: 0 8px 30px rgba(52,211,153,0.3); transform: translateY(-2px); }
 
   .btn svg { width: 16px; height: 16px; }
 
@@ -734,6 +748,12 @@
   .drugs .ambient { background: var(--accent-drugs); }
   .civil .ambient { background: var(--accent-civil); }
   .feminism .ambient { background: var(--accent-feminism); }
+  .future .ambient { background: var(--accent-future); }
+
+  .future-actionables {
+    max-width: 1100px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
 
   /* ─── RESPONSIVE ─── */
   @media (max-width: 768px) {
@@ -789,6 +809,9 @@
   </button>
   <button class="nav-dot" data-section="feminism" onclick="scrollToSection('feminism')">
     <span class="tooltip">Feminism</span>
+  </button>
+  <button class="nav-dot" data-section="future" onclick="scrollToSection('future')">
+    <span class="tooltip">Future</span>
   </button>
 </nav>
 
@@ -1130,7 +1153,75 @@
   </div>
 
   <div class="cta-row">
-    <a href="#hero" class="btn btn-feminism">Back to Top <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 15l7-7 7 7"/></svg></a>
+    <a href="#future" class="btn btn-feminism">Continue to Future <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg></a>
+    <a href="#hero" class="btn btn-outline">Back to Top <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 15l7-7 7 7"/></svg></a>
+  </div>
+</section>
+
+<!-- ████████████████ FUTURE ████████████████ -->
+<div class="section-divider" id="future-divider">
+  <div class="divider-line"></div>
+  <span class="divider-year">Section 04</span>
+  <div class="divider-line"></div>
+</div>
+
+<section class="timeline-section future" id="future">
+  <div class="ambient" style="top: 10%; right: -10%;"></div>
+
+  <div class="section-header">
+    <div class="section-number">04</div>
+    <span class="section-label">The Next Movement</span>
+    <h2 class="section-title">Wealth Redistribution, <em>Universal Basic Income</em> & Actionables</h2>
+    <p class="section-intro">How every American—from the ultra-wealthy to those experiencing homelessness—can take concrete steps to advance economic justice, UBI, and a more equitable society.</p>
+  </div>
+
+  <div class="figures-grid future-actionables">
+    <div class="figure-card">
+      <div class="figure-icon">🏛️</div>
+      <div class="figure-name">$50M – $100B+</div>
+      <div class="figure-role">Multimillionaire to Billionaire</div>
+      <p class="figure-desc">Stop evading corporate taxes. Pay fair wages. Fund UBI pilots and policy advocacy. Your wealth was built on public infrastructure—reinvest in the commons. Support candidates who champion wealth taxes and closing loopholes.</p>
+    </div>
+    <div class="figure-card">
+      <div class="figure-icon">🌱</div>
+      <div class="figure-name">$5M – $50M</div>
+      <div class="figure-role">Don't Donate—Reinvest First</div>
+      <p class="figure-desc">Do not donate your wealth yet. Reinvest entirely in passive income streams so you don't have to work. You don't need more than that to retire comfortably. Once you're generating $50K MRR, start nonprofit organizations and network with others to build them—think Feeding America, St. Jude's Hospital. Essentially startup companies, but for a cause.</p>
+    </div>
+    <div class="figure-card">
+      <div class="figure-icon">💼</div>
+      <div class="figure-name">$100K – $5M</div>
+      <div class="figure-role">Entrepreneurial Giving</div>
+      <p class="figure-desc">You don't have the same funding as a multimillionaire, but you have free time. Get entrepreneurial and generate passive income streams so you can focus on giving back to your community. Invest in local mutual aid, support worker-owned cooperatives, and fund UBI advocacy.</p>
+    </div>
+    <div class="figure-card">
+      <div class="figure-icon">✊</div>
+      <div class="figure-name">$50K – $100K</div>
+      <div class="figure-role">Organize & Vote</div>
+      <p class="figure-desc">Protest. Unionize at work by joining existing unions. Vote for UBI candidates. Use your stability to support those with less—donate time and money to mutual aid networks and tenant organizing.</p>
+    </div>
+    <div class="figure-card">
+      <div class="figure-icon">📢</div>
+      <div class="figure-name">$10K – $50K</div>
+      <div class="figure-role">Protest & Unionize</div>
+      <p class="figure-desc">Protest. Unionize at work. Vote for UBI candidates. Your collective power matters—when workers organize, policy changes.</p>
+    </div>
+    <div class="figure-card">
+      <div class="figure-icon">📱</div>
+      <div class="figure-name">Homeless & Employed</div>
+      <div class="figure-role">40–60% of homeless people have jobs</div>
+      <p class="figure-desc">Protest. Document your life as a homeless person who works—it will go viral. You will make money from the internet. It's an important story that needs to be heard. Most people are unaware this is an issue; they only see people with signs on street corners. Your story can change that.</p>
+    </div>
+    <div class="figure-card">
+      <div class="figure-icon">🦺</div>
+      <div class="figure-name">Homeless & Unemployed</div>
+      <div class="figure-role">Your voice matters</div>
+      <p class="figure-desc">Protest. Show up. Your presence in the streets is a demand for housing, healthcare, and dignity. Solidarity with others in your situation amplifies the message.</p>
+    </div>
+  </div>
+
+  <div class="cta-row">
+    <a href="#hero" class="btn btn-future">Back to Top <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 15l7-7 7 7"/></svg></a>
     <a href="#" class="btn btn-outline">Share This Timeline <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13"/></svg></a>
   </div>
 </section>
@@ -1188,7 +1279,7 @@
   });
 
   // ─── NAV DOTS ACTIVE STATE ───
-  const sections = ['hero', 'drugs', 'civil', 'feminism'];
+  const sections = ['hero', 'drugs', 'civil', 'feminism', 'future'];
   const dots = document.querySelectorAll('.nav-dot');
 
   const sectionObserver = new IntersectionObserver((entries) => {
