@@ -810,6 +810,24 @@
     opacity: 0.95;
   }
 
+  .essay-citation {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    margin-top: 1rem;
+    margin-bottom: 0;
+  }
+
+  .essay-citation a {
+    color: var(--accent-future);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+
+  .essay-citation a:hover {
+    border-bottom-color: var(--accent-future);
+  }
+
   /* ─── RESPONSIVE ─── */
   @media (max-width: 768px) {
     .nav-dots { display: none; }
@@ -1296,6 +1314,8 @@
     <div class="essay-block">
       <h4>Stronger Bodies, Sharper Minds</h4>
       <p>With reduced financial stress, people gain time. Time to exercise, cook nutritious meals, engage with their children's education, and participate in civic life. Health outcomes improve, reducing the burden on emergency healthcare systems. A physically healthier population is a more productive one — fewer sick days, lower insurance costs, longer working lives. This is King's "person-oriented society" in practice.</p>
+      <p>The scale of the problem is stark: national obesity prevalence among US adults is approximately 40–43%. In 2022, an estimated 42.5% of US adults had obesity; during 2021–2023 the prevalence was 40.3%. More recent data from 2024–2025 shows an obesity prevalence of 43.7%. The overall prevalence has increased substantially from 19.3% in 1990, and when including both overweight and obesity, approximately 73–76% of US adults are affected. There are significant disparities by race and ethnicity, with non-Hispanic Black females having the highest obesity prevalence at 56.9%, followed by Hispanic females at 49.4%. Wealth redistribution that enables time for health—and access to nutritious food and safe places to exercise—directly addresses these structural drivers.</p>
+      <p class="essay-citation"><a href="https://jamanetwork.com/journals/jama/fullarticle/10.1001/jama.2025.26817" target="_blank" rel="noopener noreferrer">JAMA: Obesity prevalence in US adults</a></p>
     </div>
 
     <div class="essay-block">
