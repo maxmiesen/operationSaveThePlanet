@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Historical Timeline for Context</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@300;400;500;700&family=DM+Sans:wght@300;400;500;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050508;
+    --bg-card: #0a0e0a;
+    --bg-elevated: #0f140f;
+    --border: rgba(74,222,128,0.06);
+    --border-hover: rgba(74,222,128,0.15);
+    --green-neon: #00ff66;
+    --green-bright: #4ade80;
+    --green-mid: #2d7a2d;
+    --green-dark: #1a3a1a;
+    --gold: #ffd700;
+    --red: #e63946;
+    --blue: #44aaff;
+    --violet: #a78bfa;
+    --text: #e8e6e1;
+    --text-secondary: #a0a0a0;
+    --text-muted: #5a6a5a;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); overflow-x:hidden; }
+  body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:9999; opacity:0.025; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+  /* ===== NAV ===== */
+  .top-nav {
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 48px;
+    background:rgba(5,5,8,0.85);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    border-bottom:1px solid var(--border);
+  }
+  .top-nav a {
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.6rem;
+    letter-spacing:0.2em;
+    text-transform:uppercase;
+    color:var(--text-muted);
+    text-decoration:none;
+    transition:color 0.3s;
+    padding:6px 0;
+  }
+  .top-nav a:hover { color:var(--green-neon); }
+  .top-nav a.active { color:var(--green-neon); }
+  .nav-links { display:flex; gap:28px; }
+
+  /* ===== HERO ===== */
+  .hero {
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:120px 24px 80px;
+    position:relative;
+  }
+  .hero::before {
+    content:'';
+    position:absolute;
+    top:0; left:0; right:0;
+    height:2px;
+    background:linear-gradient(90deg,var(--green-mid),var(--green-neon),var(--gold),var(--green-neon),var(--green-mid));
+  }
+  .hero::after {
+    content:'';
+    position:absolute;
+    top:50%; left:50%;
+    transform:translate(-50%,-50%);
+    width:800px; height:800px;
+    background:radial-gradient(circle,rgba(0,255,102,0.04) 0%,transparent 70%);
+    pointer-events:none;
+  }
+  .hero-pre {
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.6rem;
+    letter-spacing:0.4em;
+    text-transform:uppercase;
+    color:var(--text-muted);
+    margin-bottom:20px;
+    opacity:0;
+    animation:slideUp 0.8s ease 0.2s forwards;
+  }
+  .hero h1 {
+    font-family:'Bebas Neue',sans-serif;
+    font-size:clamp(3rem,8vw,7rem);
+    font-weight:400;
+    line-height:0.95;
+    letter-spacing:0.04em;
+    color:#fff;
+    max-width:900px;
+    opacity:0;
+    animation:slideUp 0.8s ease 0.4s forwards;
+  }
+  .hero h1 em {
+    font-style:normal;
+    color:var(--green-neon);
+    text-shadow:0 0 40px rgba(0,255,102,0.2);
+  }
+  .hero-line {
+    width:80px; height:2px;
+    background:linear-gradient(90deg,transparent,var(--green-neon),transparent);
+    margin:28px auto;
+    opacity:0;
+    animation:slideUp 0.8s ease 0.6s forwards;
+  }
+  .hero-desc {
+    font-size:clamp(0.9rem,1.5vw,1.05rem);
+    font-weight:300;
+    color:var(--text-muted);
+    max-width:600px;
+    line-height:1.8;
+    opacity:0;
+    animation:slideUp 0.8s ease 0.8s forwards;
+  }
+  .scroll-cue {
+    margin-top:60px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+    opacity:0;
+    animation:slideUp 0.8s ease 1s forwards;
+  }
+  .scroll-cue span {
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.5rem;
+    letter-spacing:0.3em;
+    text-transform:uppercase;
+    color:var(--text-muted);
+  }
+  .scroll-cue .dot {
+    width:4px; height:4px;
+    border-radius:50%;
+    background:var(--green-neon);
+    animation:pulse 2s ease infinite;
+  }
+
+  /* ===== SECTION STRUCTURE ===== */
+  .section {
+    padding:100px 48px 80px;
+    position:relative;
+    border-top:1px solid var(--border);
+  }
+  .section-marker {
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.55rem;
+    letter-spacing:0.3em;
+    text-transform:uppercase;
+    color:var(--text-muted);
+    margin-bottom:8px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .section-marker .num {
+    font-family:'Bebas Neue',sans-serif;
+    font-size:4rem;
+    color:rgba(0,255,102,0.06);
+    line-height:1;
+    position:absolute;
+    top:80px; left:48px;
+  }
+  .section-era {
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.65rem;
+    letter-spacing:0.15em;
+    color:var(--green-neon);
+    margin-bottom:12px;
+  }
+  .section h2 {
+    font-family:'Bebas Neue',sans-serif;
+    font-size:clamp(2rem,4vw,3.2rem);
+    font-weight:400;
+    letter-spacing:0.04em;
+    color:#fff;
+    margin-bottom:20px;
+    max-width:700px;
+  }
+  .section h2 em {
+    font-style:normal;
+    color:var(--green-neon);
+    text-shadow:0 0 30px rgba(0,255,102,0.15);
+  }
+  .section-desc {
+    font-size:0.95rem;
+    font-weight:300;
+    color:var(--text-secondary);
+    max-width:700px;
+    line-height:1.8;
+    margin-bottom:40px;
+  }
+
+  /* ===== STAT STRIP ===== */
+  .stat-strip {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+    gap:16px;
+    margin-bottom:48px;
+  }
+  .stat-item {
+    background:var(--bg-card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:20px;
+    text-align:center;
+    transition:all 0.3s ease;
+  }
+  .stat-item:hover { border-color:var(--border-hover); background:var(--bg-elevated); }
+  .stat-item .val {
+    font-family:'Bebas Neue',sans-serif;
+    font-size:1.8rem;
+    color:var(--green-neon);
+    letter-spacing:0.02em;
+  }
+  .stat-item .label {
+    font-size:0.68rem;
+    color:var(--text-muted);
+    margin-top:4px;
+    font-weight:300;
+  }
+
+  /* ===== TIMELINE ===== */
+  .timeline {
+    position:relative;
+    padding-left:48px;
+    margin-bottom:48px;
+  }
+  .timeline::before {
+    content:'';
+    position:absolute;
+    left:12px; top:0; bottom:0;
+    width:1px;
+    background:linear-gradient(180deg,var(--green-neon),rgba(0,255,102,0.1));
+  }
+  .tl-event {
+    position:relative;
+    padding:0 0 40px 0;
+  }
+  .tl-event::before {
+    content:'';
+    position:absolute;
+    left:-42px; top:6px;
+    width:10px; height:10px;
+    border-radius:50%;
+    background:var(--bg);
+    border:2px solid var(--green-neon);
+    box-shadow:0 0 12px rgba(0,255,102,0.3);
+    z-index:1;
+  }
+  .tl-date {
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.65rem;
+    letter-spacing:0.15em;
+    color:var(--green-neon);
+    margin-bottom:6px;
+  }
+  .tl-title {
+    font-family:'Oswald',sans-serif;
+    font-size:1.1rem;
+    font-weight:500;
+    color:#fff;
+    margin-bottom:8px;
+    letter-spacing:0.02em;
+  }
+  .tl-text {
+    font-size:0.85rem;
+    font-weight:300;
+    color:var(--text-secondary);
+    line-height:1.75;
+    max-width:600px;
+  }
+
+  /* ===== QUOTE ===== */
+  .quote-block {
+    background:var(--bg-card);
+    border:1px solid var(--border);
+    border-left:3px solid var(--green-neon);
+    border-radius:12px;
+    padding:32px 36px;
+    margin:40px 0;
+    max-width:700px;
+  }
+  .quote-mark {
+    font-family:'Bebas Neue',sans-serif;
+    font-size:3rem;
+    color:rgba(0,255,102,0.15);
+    line-height:1;
+    margin-bottom:8px;
+  }
+  .quote-text {
+    font-size:1.05rem;
+    font-weight:300;
+    color:var(--text);
+    line-height:1.7;
+    font-style:italic;
+  }
+  .quote-author {
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.6rem;
+    letter-spacing:0.15em;
+    color:var(--text-muted);
+    margin-top:16px;
+  }
+
+  /* ===== LEADERS COMPARISON (Civil Rights) ===== */
+  .leaders-grid {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+    margin-bottom:40px;
+  }
+  .leader-card {
+    background:var(--bg-card);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:28px;
+    transition:all 0.3s ease;
+  }
+  .leader-card:hover { border-color:var(--border-hover); background:var(--bg-elevated); }
+  .leader-icon { font-size:2rem; margin-bottom:12px; }
+  .leader-name {
+    font-family:'Oswald',sans-serif;
+    font-size:1.1rem;
+    font-weight:500;
+    color:#fff;
+    margin-bottom:2px;
+  }
+  .leader-approach {
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.6rem;
+    letter-spacing:0.15em;
+    color:var(--green-neon);
+    margin-bottom:12px;
+  }
+  .leader-desc {
+    font-size:0.82rem;
+    font-weight:300;
+    color:var(--text-secondary);
+    line-height:1.7;
+  }
+
+  /* ===== WAVES (Feminism) ===== */
+  .waves-grid {
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+    margin-bottom:40px;
+  }
+  .wave-card {
+    background:var(--bg-card);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:24px;
+    transition:all 0.3s ease;
+  }
+  .wave-card:hover { border-color:var(--border-hover); background:var(--bg-elevated); }
+  .wave-icon { font-size:1.8rem; margin-bottom:10px; }
+  .wave-name {
+    font-family:'Oswald',sans-serif;
+    font-size:0.95rem;
+    font-weight:500;
+    color:#fff;
+    margin-bottom:2px;
+  }
+  .wave-era {
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.55rem;
+    letter-spacing:0.1em;
+    color:var(--green-neon);
+    margin-bottom:10px;
+  }
+  .wave-desc {
+    font-size:0.78rem;
+    font-weight:300;
+    color:var(--text-secondary);
+    line-height:1.65;
+  }
+
+  /* ===== SECTION LINK ===== */
+  .section-link {
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.65rem;
+    letter-spacing:0.15em;
+    text-transform:uppercase;
+    color:var(--green-neon);
+    text-decoration:none;
+    margin-top:20px;
+    transition:gap 0.3s ease;
+  }
+  .section-link:hover { gap:14px; }
+
+  /* ===== FOOTER ===== */
+  .page-footer {
+    padding:60px 48px 40px;
+    text-align:center;
+    border-top:1px solid var(--border);
+  }
+  .footer-pre {
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.55rem;
+    letter-spacing:0.3em;
+    text-transform:uppercase;
+    color:var(--text-muted);
+    margin-bottom:12px;
+  }
+  .footer-text {
+    font-family:'Oswald',sans-serif;
+    font-size:1.2rem;
+    font-weight:300;
+    color:var(--text-secondary);
+    max-width:500px;
+    margin:0 auto;
+    line-height:1.6;
+    letter-spacing:0.03em;
+  }
+  .footer-text em { font-style:normal; color:var(--green-neon); }
+
+  /* ===== ANIMATIONS ===== */
+  @keyframes slideUp {
+    from { opacity:0; transform:translateY(20px); }
+    to { opacity:1; transform:translateY(0); }
+  }
+  @keyframes pulse {
+    0%,100% { opacity:0.3; transform:translateY(0); }
+    50% { opacity:0.8; transform:translateY(4px); }
+  }
+
+  @media(max-width:768px) {
+    .top-nav { padding:12px 20px; }
+    .nav-links { gap:16px; }
+    .section { padding:60px 20px 60px; }
+    .leaders-grid, .waves-grid { grid-template-columns:1fr; }
+    .hero { padding:100px 20px 60px; }
+    .timeline { padding-left:36px; }
+    .tl-event::before { left:-30px; }
+    .section-marker .num { left:20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="top-nav" id="top">
+  <a href="index.html">← Back to Mission</a>
+  <div class="nav-links">
+    <a href="#drugs">War on Drugs</a>
+    <a href="#civil">Civil Rights</a>
+    <a href="#feminism">Feminism</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-pre">An interactive chronicle</div>
+  <h1>Historical Timeline <em>for Context</em></h1>
+  <div class="hero-line"></div>
+  <p class="hero-desc">A visual journey through the struggles, leaders, and turning points that redefined justice, equality, and freedom in the United States.</p>
+  <div class="scroll-cue">
+    <span>Scroll to explore</span>
+    <div class="dot"></div>
+  </div>
+</section>
+
+<!-- SECTION 01: WAR ON DRUGS -->
+<section class="section" id="drugs">
+  <div class="section-marker"><span class="num">01</span>Section 01</div>
+  <div class="section-era">1971 – Present</div>
+  <h2>The War on <em>Drugs</em></h2>
+  <p class="section-desc">Declared by President Nixon in 1971 and dramatically escalated through the decades, the War on Drugs became one of the most far-reaching and controversial policy campaigns in American history.</p>
+
+  <div class="stat-strip">
+    <div class="stat-item"><div class="val">$1T+</div><div class="label">Federal spending</div></div>
+    <div class="stat-item"><div class="val">2.3M</div><div class="label">Incarcerated today</div></div>
+    <div class="stat-item"><div class="val">5×</div><div class="label">Black arrest disparity</div></div>
+    <div class="stat-item"><div class="val">45+</div><div class="label">States reforming</div></div>
+  </div>
+
+  <div class="timeline">
+    <div class="tl-event">
+      <div class="tl-date">June 17, 1971</div>
+      <div class="tl-title">Nixon Declares "War on Drugs"</div>
+      <div class="tl-text">President Richard Nixon declared drug abuse "public enemy number one," creating the Special Action Office for Drug Abuse Prevention and dramatically expanding federal drug control agencies.</div>
+    </div>
+    <div class="tl-event">
+      <div class="tl-date">1973</div>
+      <div class="tl-title">DEA Established</div>
+      <div class="tl-text">The Drug Enforcement Administration was created through an executive order, consolidating all federal drug enforcement under one agency with vast reach and authority.</div>
+    </div>
+    <div class="tl-event">
+      <div class="tl-date">1986</div>
+      <div class="tl-title">Anti-Drug Abuse Act</div>
+      <div class="tl-text">Congress passed mandatory minimum sentences, including the notorious 100:1 crack-to-powder cocaine disparity. This single law reshaped the American prison system and disproportionately affected Black communities.</div>
+    </div>
+    <div class="tl-event">
+      <div class="tl-date">1994</div>
+      <div class="tl-title">Three Strikes Laws</div>
+      <div class="tl-text">The Violent Crime Control Act introduced "three strikes" provisions mandating life sentences for repeat offenders. Federal and state prison populations surged to unprecedented levels.</div>
+    </div>
+    <div class="tl-event">
+      <div class="tl-date">2010 – Present</div>
+      <div class="tl-title">Reform & Reckoning</div>
+      <div class="tl-text">The Fair Sentencing Act reduced the crack-powder disparity to 18:1. States began legalizing cannabis. A growing bipartisan consensus acknowledged the policy's disproportionate impact on communities of color.</div>
+    </div>
+  </div>
+
+  <div class="quote-block">
+    <div class="quote-mark">"</div>
+    <div class="quote-text">You want to know what this was really all about? The Nixon campaign had two enemies: the antiwar left and Black people.</div>
+    <div class="quote-author">John Ehrlichman, Nixon Advisor</div>
+  </div>
+
+  <a href="#civil" class="section-link">Continue to Civil Rights →</a>
+</section>
+
+<!-- SECTION 02: CIVIL RIGHTS -->
+<section class="section" id="civil">
+  <div class="section-marker"><span class="num">02</span>Section 02</div>
+  <div class="section-era">1950s – 1960s</div>
+  <h2>The Civil Rights <em>Movement</em></h2>
+  <p class="section-desc">Two towering visions of liberation — one rooted in nonviolent resistance, the other in self-determination — forever transformed the fight for racial equality in America.</p>
+
+  <div class="leaders-grid">
+    <div class="leader-card">
+      <div class="leader-icon">✊</div>
+      <div class="leader-name">Martin Luther King Jr.</div>
+      <div class="leader-approach">Nonviolent Resistance</div>
+      <div class="leader-desc">A Baptist minister and architect of nonviolent protest, King led the Montgomery Bus Boycott, the March on Washington, and the Selma campaigns. His philosophy drew from Gandhi's methods and Christian theology to forge a movement of moral clarity.</div>
+    </div>
+    <div class="leader-card">
+      <div class="leader-icon">🔥</div>
+      <div class="leader-name">Malcolm X</div>
+      <div class="leader-approach">Self-Determination</div>
+      <div class="leader-desc">A fiery orator and former Nation of Islam leader, Malcolm X advocated for Black self-defense, economic independence, and Pan-African solidarity. His pilgrimage to Mecca broadened his vision toward universal human rights before his assassination in 1965.</div>
+    </div>
+  </div>
+
+  <div class="stat-strip">
+    <div class="stat-item"><div class="val">250K</div><div class="label">March on Washington</div></div>
+    <div class="stat-item"><div class="val">1964</div><div class="label">Civil Rights Act</div></div>
+    <div class="stat-item"><div class="val">1965</div><div class="label">Voting Rights Act</div></div>
+  </div>
+
+  <div class="timeline">
+    <div class="tl-event">
+      <div class="tl-date">December 1955</div>
+      <div class="tl-title">Montgomery Bus Boycott</div>
+      <div class="tl-text">After Rosa Parks refused to give up her seat, King led a 381-day boycott of the Montgomery bus system. The Supreme Court ultimately ruled bus segregation unconstitutional, launching the modern civil rights movement.</div>
+    </div>
+    <div class="tl-event">
+      <div class="tl-date">1960</div>
+      <div class="tl-title">Sit-Ins & Freedom Rides</div>
+      <div class="tl-text">Four Black college students sat at a whites-only lunch counter in Greensboro, North Carolina, sparking a wave of sit-ins across the South. Freedom Riders challenged segregated interstate transit, facing violent mobs.</div>
+    </div>
+    <div class="tl-event">
+      <div class="tl-date">August 28, 1963</div>
+      <div class="tl-title">March on Washington</div>
+      <div class="tl-text">Over 250,000 people gathered at the Lincoln Memorial for the largest demonstration in the capital's history. King delivered his iconic "I Have a Dream" address, galvanizing the nation and pressuring Congress toward legislation.</div>
+    </div>
+    <div class="tl-event">
+      <div class="tl-date">1964 – 1965</div>
+      <div class="tl-title">Landmark Legislation</div>
+      <div class="tl-text">The Civil Rights Act of 1964 outlawed discrimination based on race, color, religion, sex, or national origin. The Voting Rights Act of 1965 struck down barriers to Black suffrage, transforming American democracy.</div>
+    </div>
+    <div class="tl-event">
+      <div class="tl-date">1966 – 1970s</div>
+      <div class="tl-title">Black Power & Beyond</div>
+      <div class="tl-text">The Black Panther Party, SNCC, and other groups expanded the movement's scope to address economic justice, policing, and community self-governance. Malcolm X's legacy fueled a new generation of organizing around self-determination.</div>
+    </div>
+  </div>
+
+  <div class="quote-block">
+    <div class="quote-mark">"</div>
+    <div class="quote-text">Injustice anywhere is a threat to justice everywhere. We are caught in an inescapable network of mutuality.</div>
+    <div class="quote-author">Martin Luther King Jr.</div>
+  </div>
+
+  <a href="#feminism" class="section-link">Continue to Feminism →</a>
+</section>
+
+<!-- SECTION 03: FEMINISM -->
+<section class="section" id="feminism">
+  <div class="section-marker"><span class="num">03</span>Section 03</div>
+  <div class="section-era">1848 – Present</div>
+  <h2>The Feminist <em>Movements</em></h2>
+  <p class="section-desc">From suffrage to intersectionality, women's movements have redefined political participation, economic rights, bodily autonomy, and the very meaning of equality across four distinct waves.</p>
+
+  <div class="waves-grid">
+    <div class="wave-card">
+      <div class="wave-icon">⚖️</div>
+      <div class="wave-name">First Wave</div>
+      <div class="wave-era">1848 – 1920 · Suffrage</div>
+      <div class="wave-desc">Centered on women's legal rights, property ownership, and the right to vote. Led by figures like Susan B. Anthony and Elizabeth Cady Stanton, culminating in the 19th Amendment.</div>
+    </div>
+    <div class="wave-card">
+      <div class="wave-icon">🌊</div>
+      <div class="wave-name">Second Wave</div>
+      <div class="wave-era">1960s – 1980s · Liberation</div>
+      <div class="wave-desc">Expanded the fight to workplace equality, reproductive rights, sexuality, and domestic violence. Betty Friedan's "The Feminine Mystique" and the founding of NOW catalyzed a generation.</div>
+    </div>
+    <div class="wave-card">
+      <div class="wave-icon">🔮</div>
+      <div class="wave-name">Third & Fourth Waves</div>
+      <div class="wave-era">1990s – Present · Intersectionality</div>
+      <div class="wave-desc">Embraced diversity of identity, challenged gender binaries, and leveraged digital activism. The #MeToo movement exposed systemic sexual harassment across institutions worldwide.</div>
+    </div>
+  </div>
+
+  <div class="stat-strip">
+    <div class="stat-item"><div class="val">1920</div><div class="label">19th Amendment</div></div>
+    <div class="stat-item"><div class="val">1973</div><div class="label">Roe v. Wade</div></div>
+    <div class="stat-item"><div class="val">5M+</div><div class="label">2017 Women's March</div></div>
+    <div class="stat-item"><div class="val">83¢</div><div class="label">Gender pay gap</div></div>
+  </div>
+
+  <div class="timeline">
+    <div class="tl-event">
+      <div class="tl-date">1848</div>
+      <div class="tl-title">Seneca Falls Convention</div>
+      <div class="tl-text">The first women's rights convention in the United States, held in Seneca Falls, New York. The Declaration of Sentiments asserted that "all men and women are created equal," launching the organized suffrage movement.</div>
+    </div>
+    <div class="tl-event">
+      <div class="tl-date">August 18, 1920</div>
+      <div class="tl-title">19th Amendment Ratified</div>
+      <div class="tl-text">After 72 years of activism, protests, hunger strikes, and imprisonment, women won the constitutional right to vote. The amendment passed by a single vote in Tennessee's legislature.</div>
+    </div>
+    <div class="tl-event">
+      <div class="tl-date">1963 – 1972</div>
+      <div class="tl-title">Second Wave Legislation</div>
+      <div class="tl-text">The Equal Pay Act (1963), Title VII of the Civil Rights Act (1964), and Title IX (1972) established legal frameworks against sex-based discrimination in pay, employment, and education.</div>
+    </div>
+    <div class="tl-event">
+      <div class="tl-date">1973</div>
+      <div class="tl-title">Roe v. Wade</div>
+      <div class="tl-text">The Supreme Court ruled that the Constitution protected a woman's right to abortion, establishing a landmark precedent on reproductive autonomy that would shape political discourse for half a century.</div>
+    </div>
+    <div class="tl-event">
+      <div class="tl-date">2017 – Present</div>
+      <div class="tl-title">#MeToo & The Fourth Wave</div>
+      <div class="tl-text">The #MeToo movement, catalyzed by revelations about Harvey Weinstein, triggered a global reckoning on sexual harassment. The Women's March became the largest single-day protest in U.S. history, and ongoing fights for pay equity and reproductive rights continue.</div>
+    </div>
+  </div>
+
+  <div class="quote-block">
+    <div class="quote-mark">"</div>
+    <div class="quote-text">I am no longer accepting the things I cannot change. I am changing the things I cannot accept.</div>
+    <div class="quote-author">Angela Davis</div>
+  </div>
+
+  <a href="#hero" class="section-link">Back to Top ↑</a>
+</section>
+
+<!-- FOOTER -->
+<footer class="page-footer">
+  <div class="footer-pre">The struggle continues</div>
+  <div class="footer-text">History doesn't repeat, but it rhymes. These movements are not over. Understanding the past is the first step toward <em>shaping the future.</em></div>
+</footer>
+
+<script>
+// Highlight active nav on scroll
+const sections = document.querySelectorAll('.section');
+const navLinks = document.querySelectorAll('.nav-links a');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(l => l.classList.remove('active'));
+      const id = entry.target.id;
+      const link = document.querySelector(`.nav-links a[href="#${id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { threshold: 0.3 });
+sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>

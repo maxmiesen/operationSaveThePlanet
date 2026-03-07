@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wealth Inequality Visualized</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Courier New', Consolas, monospace;
+    background: #0a0a0a;
+    color: #e8e8e8;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  .header {
+    padding: 48px 64px 32px;
+    border-bottom: 1px solid #1a1a1a;
+    position: relative;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #ff3333, #ff6633, #ffcc33, #33ff66, #3366ff, #9933ff);
+  }
+  .header-tag { font-size: 11px; letter-spacing: 6px; color: #666; text-transform: uppercase; margin-bottom: 16px; }
+  .header h1 { font-size: 36px; font-weight: 700; line-height: 1.1; color: #fff; max-width: 700px; }
+  .header h1 span { color: #ff4444; }
+  .header p { color: #777; font-size: 13px; margin-top: 16px; max-width: 600px; line-height: 1.6; }
+  .tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid #1a1a1a;
+    padding: 0 64px;
+  }
+  .tab {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: #555;
+    padding: 16px 24px;
+    font-size: 11px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.3s;
+  }
+  .tab:hover { color: #888; }
+  .tab.active { border-bottom-color: #ff4444; color: #fff; }
+  .content { padding: 40px 64px; }
+  .view { display: none; }
+  .view.active { display: block; animation: fadeIn 0.6s ease; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .stat-block { margin-bottom: 24px; }
+  .stat-label { font-size: 11px; letter-spacing: 4px; margin-bottom: 8px; }
+  .stat-label.red { color: #ff4444; }
+  .stat-label.blue { color: #44aaff; }
+  .stat-value { font-size: 56px; font-weight: 700; color: #fff; line-height: 1; }
+  .stat-sub { font-size: 13px; color: #555; margin-top: 8px; }
+  .bar {
+    margin-top: 24px;
+    height: 48px;
+    border-radius: 4px;
+    transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .bar.red { background: linear-gradient(90deg, #ff2222, #ff4444, #ff6644); box-shadow: 0 0 40px rgba(255,68,68,0.3); }
+  .bar.blue { background: linear-gradient(90deg, #2266ff, #44aaff, #66ccff); box-shadow: 0 0 40px rgba(68,170,255,0.2); }
+  .insight-box {
+    background: #111;
+    border: 1px solid #222;
+    border-radius: 8px;
+    padding: 40px;
+    margin: 40px 0;
+    position: relative;
+    border-left: 4px solid #ff4444;
+  }
+  .insight-tag { font-size: 11px; letter-spacing: 4px; color: #888; margin-bottom: 16px; }
+  .insight-text { font-size: 24px; color: #fff; line-height: 1.4; max-width: 700px; }
+  .insight-text span { color: #ff4444; font-weight: 700; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 24px; }
+  .card {
+    background: #111;
+    border: 1px solid #1a1a1a;
+    border-radius: 8px;
+    padding: 28px;
+  }
+  .card-icon { font-size: 36px; margin-bottom: 8px; }
+  .card-label { font-size: 11px; letter-spacing: 3px; color: #666; margin-bottom: 4px; }
+  .card-value { font-size: 28px; font-weight: 700; margin-top: 4px; }
+  .card-desc { font-size: 12px; color: #555; margin-top: 4px; }
+  .billionaire-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: transform 0.3s;
+  }
+  .billionaire-row:hover { transform: translateX(4px); }
+  .billionaire-emoji { font-size: 20px; }
+  .billionaire-name { font-size: 13px; min-width: 160px; color: #aaa; }
+  .billionaire-row:hover .billionaire-name { color: #fff; }
+  .billionaire-tooltip {
+    margin-left: 192px;
+    font-size: 12px;
+    color: #666;
+    padding-bottom: 4px;
+    display: none;
+  }
+  .billionaire-row:hover .billionaire-tooltip { display: block; }
+  .billionaire-wealth { font-size: 13px; color: #ff4444; font-weight: 700; min-width: 80px; }
+  .billionaire-bar-wrap { flex: 1; height: 32px; position: relative; }
+  .billionaire-bar {
+    position: absolute;
+    left: 0; top: 0;
+    height: 100%;
+    border-radius: 3px;
+    transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .perspective-item {
+    display: flex;
+    gap: 20px;
+    padding: 28px;
+    background: #111;
+    border: 1px solid #1a1a1a;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    border-left: 3px solid;
+    align-items: center;
+  }
+  .perspective-icon { font-size: 36px; min-width: 50px; }
+  .perspective-label { font-size: 10px; letter-spacing: 3px; color: #555; margin-bottom: 4px; }
+  .perspective-stat { font-size: 24px; font-weight: 700; }
+  .perspective-desc { font-size: 13px; color: #666; margin-top: 4px; }
+  .dot-grid-box {
+    margin-top: 40px;
+    padding: 28px;
+    background: #111;
+    border: 1px solid #1a1a1a;
+    border-radius: 8px;
+  }
+  .dot-grid-label { font-size: 11px; letter-spacing: 3px; color: #666; margin-bottom: 16px; }
+  .dot-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+  }
+  .dot-grid .dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+  }
+  .dot-grid-desc { font-size: 12px; margin-bottom: 8px; }
+  .dot-grid-footnote { font-size: 11px; color: #444; margin-top: 8px; }
+  .footer {
+    padding: 24px 64px;
+    border-top: 1px solid #1a1a1a;
+    font-size: 11px;
+    color: #333;
+    display: flex;
+    justify-content: space-between;
+  }
+  @media (max-width: 768px) {
+    .grid-3 { grid-template-columns: 1fr; }
+    .header, .content { padding: 24px 24px; }
+    .tabs { padding: 0 24px; }
+    .footer { padding: 24px 24px; }
+  }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-tag">Wealth Inequality Visualized</div>
+  <h1>10 People Own More Than <br><span>54 Million Households</span> Earn in a Year</h1>
+  <p>The combined net worth of the world's 10 richest people compared to the combined annual income of every U.S. household earning $100K–$1M per year. Forbes data, January 2026.</p>
+</div>
+
+<div class="tabs">
+  <button class="tab active" data-view="overview">THE SCALE</button>
+  <button class="tab" data-view="individual">BY BILLIONAIRE</button>
+  <button class="tab" data-view="perspective">IN PERSPECTIVE</button>
+</div>
+
+<div class="content">
+  <div id="overview" class="view active">
+    <div class="stat-block">
+      <div class="stat-label red">TOP 10 BILLIONAIRES — COMBINED NET WORTH</div>
+      <div class="stat-value"><span id="billionaire-total">$0B</span></div>
+      <div class="stat-sub">That's $2.5 Trillion from just 10 people</div>
+      <div class="bar red" id="bar-billionaires" style="width: 0%"></div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-label blue">54M UPPER-MIDDLE-CLASS HOUSEHOLDS — COMBINED ANNUAL INCOME</div>
+      <div class="stat-value"><span id="umc-total">$0B</span></div>
+      <div class="stat-sub">Every household earning $100K–$1M/yr, combined</div>
+      <div class="bar blue" id="bar-umc" style="width: 0%"></div>
+    </div>
+    <div class="insight-box">
+      <div class="insight-tag">KEY INSIGHT</div>
+      <div class="insight-text">The top 10 billionaires' combined wealth equals <span id="months-match">~2.8</span> months of the entire combined annual income of 54 million upper-middle-class households.</div>
+      <div class="stat-sub" style="margin-top: 16px;">Elon Musk alone holds wealth equal to ~1 month of income from all 54M households combined.</div>
+    </div>
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-icon">🧑‍💼</div>
+        <div class="card-label">PEOPLE REPRESENTED</div>
+        <div class="card-value" style="color: #44aaff">~140M</div>
+        <div class="card-desc">People in 54M households earning $100K–$1M</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">💰</div>
+        <div class="card-label">AVERAGE HOUSEHOLD INCOME</div>
+        <div class="card-value" style="color: #44aaff">$165K</div>
+        <div class="card-desc">These aren't poor people — they're the "successful" class</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">⏳</div>
+        <div class="card-label">YEARS FOR 1 HOUSEHOLD TO MATCH MUSK</div>
+        <div class="card-value" style="color: #ff4444">4.3M</div>
+        <div class="card-desc">At $165K/yr, saving every penny, no taxes</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="individual" class="view">
+    <div class="stat-label" style="color: #666; margin-bottom: 24px;">EACH BAR = ONE BILLIONAIRE'S NET WORTH vs. WHAT HOUSEHOLDS EARN</div>
+    <div id="billionaire-list"></div>
+    <div class="insight-box" style="margin-top: 40px;">
+      <div class="stat-label" style="color: #666; margin-bottom: 12px;">SCALE COMPARISON</div>
+      <div style="font-size: 12px; color: #555;">If you earned $165K/yr and saved every cent:</div>
+      <div style="margin-top: 8px; font-size: 13px; color: #aaa;">
+        <div><span style="color: #ff4444; font-weight: 700">After 100 years:</span> $16.5M <span style="color: #444">— 0.002% of Musk's wealth</span></div>
+        <div style="margin-top: 6px;"><span style="color: #ff4444; font-weight: 700">After 1,000 years:</span> $165M <span style="color: #444">— 0.02% of Musk's wealth</span></div>
+        <div style="margin-top: 6px;"><span style="color: #ff4444; font-weight: 700">After 1,000,000 years:</span> $165B <span style="color: #444">— 23% of Musk's wealth</span></div>
+        <div style="margin-top: 6px;"><span style="color: #ff4444; font-weight: 700">To match Musk:</span> ~4.3 million years</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="perspective" class="view">
+    <div class="stat-label" style="color: #666; margin-bottom: 32px;">PUTTING THE NUMBERS IN HUMAN TERMS</div>
+    <div id="perspective-list"></div>
+  </div>
+</div>
+
+<div class="footer">
+  <span>Sources: Forbes Billionaires Index (Jan 2026), U.S. Census Bureau, IBISWorld</span>
+  <span>Net worth figures fluctuate daily with market conditions</span>
+</div>
+
+<script>
+const billionaires = [
+  { name: "Elon Musk", wealth: 714.2, company: "Tesla / SpaceX / xAI", emoji: "🚀" },
+  { name: "Larry Page", wealth: 257.7, company: "Alphabet / Google", emoji: "🔍" },
+  { name: "Jeff Bezos", wealth: 251.4, company: "Amazon / Blue Origin", emoji: "📦" },
+  { name: "Larry Ellison", wealth: 242.6, company: "Oracle", emoji: "🗄️" },
+  { name: "Sergey Brin", wealth: 237.8, company: "Alphabet / Google", emoji: "🧪" },
+  { name: "Bernard Arnault", wealth: 233.0, company: "LVMH", emoji: "👜" },
+  { name: "Mark Zuckerberg", wealth: 229.3, company: "Meta", emoji: "👤" },
+  { name: "Jensen Huang", wealth: 162.5, company: "NVIDIA", emoji: "🎮" },
+  { name: "Warren Buffett", wealth: 147.5, company: "Berkshire Hathaway", emoji: "📈" },
+  { name: "Amancio Ortega", wealth: 120.0, company: "Inditex / Zara", emoji: "👔" },
+];
+const totalBillionaireWealth = billionaires.reduce((s, b) => s + b.wealth, 0);
+const UMC_HOUSEHOLDS = 54_000_000;
+const UMC_TOTAL_INCOME = 8910; // ~$8.91T in billions (54M * $165K)
+const maxWealth = billionaires[0].wealth;
+const monthsToMatch = (totalBillionaireWealth / UMC_TOTAL_INCOME) * 12;
+
+function animateValue(el, target, suffix = 'B', decimals = 1) {
+  let current = 0;
+  const duration = 1500;
+  const start = performance.now();
+  function update(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    current = target * eased;
+    const formatted = current >= 1000 ? `${(current/1000).toFixed(1)}T` : `${current.toFixed(decimals)}${suffix}`;
+    el.textContent = `$${formatted}`;
+    if (progress < 1) requestAnimationFrame(update);
+  }
+  requestAnimationFrame(update);
+}
+
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.view).classList.add('active');
+  });
+});
+
+setTimeout(() => {
+  animateValue(document.getElementById('billionaire-total'), totalBillionaireWealth);
+  animateValue(document.getElementById('umc-total'), UMC_TOTAL_INCOME / 1000, 'T', 2);
+  document.getElementById('months-match').textContent = `~${monthsToMatch.toFixed(1)}`;
+  document.getElementById('bar-billionaires').style.width = '100%';
+  document.getElementById('bar-umc').style.width = '100%';
+
+  const list = document.getElementById('billionaire-list');
+  billionaires.forEach((b, i) => {
+    const barWidth = (b.wealth / maxWealth) * 100;
+    const householdsEquiv = Math.round((b.wealth * 1000000000) / 165000);
+    const row = document.createElement('div');
+    row.className = 'billionaire-row';
+    row.innerHTML = `
+      <span class="billionaire-emoji">${b.emoji}</span>
+      <span class="billionaire-name">${b.name}</span>
+      <span class="billionaire-wealth">$${b.wealth}B</span>
+      <div class="billionaire-bar-wrap">
+        <div class="billionaire-bar" style="width: 0; background: linear-gradient(90deg, hsl(${5+i*3}, 80%, 50%), hsl(${5+i*3}, 70%, 40%))" data-width="${barWidth}"></div>
+      </div>
+      <div class="billionaire-tooltip">${b.company} · Equal to ${householdsEquiv.toLocaleString()} household-years of income at $165K</div>
+    `;
+    list.appendChild(row);
+    setTimeout(() => {
+      row.querySelector('.billionaire-bar').style.width = barWidth + '%';
+    }, 100 + i * 80);
+  });
+
+  const perspectiveData = [
+    { icon: "🏠", label: "HOMES", stat: `${(totalBillionaireWealth * 1000 / 0.4).toLocaleString(undefined, {maximumFractionDigits: 0})}`, desc: "Median-priced US homes the top 10 could buy outright", color: "#ff6644" },
+    { icon: "🎓", label: "FULL-RIDE SCHOLARSHIPS", stat: `${(totalBillionaireWealth * 1000 / 0.2).toLocaleString(undefined, {maximumFractionDigits: 0})}`, desc: "4-year university educations they could fully fund", color: "#44aaff" },
+    { icon: "💳", label: "SPENDING SPEED", stat: "$1M / minute", desc: `At $1M per minute, Elon Musk's wealth would last ${Math.round(714200/525960)} years of nonstop spending`, color: "#ffcc33" },
+    { icon: "🌍", label: "vs. COUNTRIES", stat: "Larger than most GDPs", desc: `$${(totalBillionaireWealth/1000).toFixed(1)}T combined — exceeds the GDP of the UK, France, or India`, color: "#44ff88" },
+    { icon: "📊", label: "THE RATIO", stat: `1 : ${Math.round(UMC_HOUSEHOLDS/10).toLocaleString()}`, desc: "For every 1 top-10 billionaire, there are 5.4 million upper-middle-class households", color: "#cc66ff" },
+    { icon: "⏰", label: "SECONDS IN CONTEXT", stat: `$${Math.round(714200000000 / 31536000).toLocaleString()}/sec`, desc: "If Musk's wealth accumulated over one year, that's what he'd 'earn' every second — $22,639", color: "#ff4488" },
+  ];
+  const plist = document.getElementById('perspective-list');
+  perspectiveData.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'perspective-item';
+    div.style.borderLeftColor = item.color;
+    div.style.animation = `fadeIn 0.6s ease ${i * 0.1}s both`;
+    div.innerHTML = `
+      <div class="perspective-icon">${item.icon}</div>
+      <div>
+        <div class="perspective-label">${item.label}</div>
+        <div class="perspective-stat" style="color: ${item.color}">${item.stat}</div>
+        <div class="perspective-desc">${item.desc}</div>
+      </div>
+    `;
+    plist.appendChild(div);
+  });
+
+  // Visual Dot Comparison
+  const dotBox = document.createElement('div');
+  dotBox.className = 'dot-grid-box';
+  let dotsHTML = '';
+  for (let i = 0; i < Math.round(714.2); i++) {
+    const opacity = (0.7 + (i / 714) * 0.3).toFixed(2);
+    dotsHTML += `<div class="dot" style="background-color: #ff4444; opacity: ${opacity}"></div>`;
+  }
+  dotBox.innerHTML = `
+    <div class="dot-grid-label">VISUAL SCALE — EACH DOT = $1 BILLION</div>
+    <div>
+      <div class="dot-grid-desc" style="color: #ff4444;">Elon Musk — $714.2B (714 dots)</div>
+      <div class="dot-grid">${dotsHTML}</div>
+    </div>
+    <div style="margin-top: 20px;">
+      <div class="dot-grid-desc" style="color: #44aaff;">Average upper-middle-class household net worth — $0.00045B (invisible at this scale)</div>
+      <div style="width: 1px; height: 1px; background: #44aaff; border-radius: 50%; box-shadow: 0 0 4px #44aaff;"></div>
+      <div class="dot-grid-footnote">↑ That's $450,000 — a single pixel you can barely see. At this scale, it would take 1.6 million of those dots to equal Musk's dots above.</div>
+    </div>
+  `;
+  plist.appendChild(dotBox);
+}, 200);
+</script>
+</body>
+</html>

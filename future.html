@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Future — Operation: Save The Planet</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@300;400;500;700&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050508;
+    --green-dark: #1a4a1a;
+    --green-mid: #2d7a2d;
+    --green-bright: #4ade80;
+    --green-neon: #00ff66;
+    --gold: #ffd700;
+    --red: #e63946;
+    --text: #e8e6e1;
+    --text-muted: #6b6b6b;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+  }
+
+  .top-header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    padding: 1rem 24px;
+    background: rgba(5, 5, 8, 0.9);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .top-header a {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 500;
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.3s, border-color 0.3s;
+    padding: 6px 0;
+    border-bottom: 2px solid transparent;
+  }
+  .top-header a:hover {
+    color: var(--green-bright);
+    border-bottom-color: var(--green-bright);
+  }
+
+  .page {
+    padding: 100px 24px 80px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .page-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
+    letter-spacing: 0.04em;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+  .page-title .green { color: var(--green-neon); }
+  .page-sub {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 300;
+    font-size: 1rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 48px;
+  }
+
+  .outcome-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 16px;
+    padding: 32px 36px;
+    margin-bottom: 24px;
+    border-left: 3px solid var(--green-bright);
+    transition: border-color 0.3s, background 0.3s;
+  }
+  .outcome-card:hover {
+    background: rgba(255,255,255,0.04);
+    border-left-color: var(--green-neon);
+  }
+  .outcome-number {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    color: var(--green-bright);
+    margin-bottom: 12px;
+  }
+  .outcome-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 0.04em;
+    color: #fff;
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+  .outcome-desc {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.75;
+    font-weight: 300;
+  }
+  .outcome-desc strong { color: var(--text); font-weight: 500; }
+</style>
+</head>
+<body>
+
+<header class="top-header">
+  <a href="index.html">Home</a>
+  <a href="timeline.html">Timeline</a>
+  <a href="todays-problems.html">Today's Problems</a>
+  <a href="actionables.html">Actionables</a>
+  <a href="future.html">Future</a>
+</header>
+
+<main class="page">
+  <h1 class="page-title">Potential <span class="green">Outcomes</span></h1>
+  <p class="page-sub">What we stand to gain</p>
+
+  <div class="outcome-card">
+    <div class="outcome-number">01</div>
+    <h2 class="outcome-title">Wealth Redistribution, Free Health Care & Benefits in America and Worldwide</h2>
+    <p class="outcome-desc">Economic benefits: stronger consumer demand, more business growth, reduced poverty. Social benefits: healthier populations, better education outcomes, lower crime. <strong>Gini coefficient</strong> improvement — a more equal society measures better on the Gini scale, indicating fairer distribution of income and wealth. Benefits extend globally as the U.S. shifts from extraction to partnership, funding development and stability abroad.</p>
+  </div>
+
+  <div class="outcome-card">
+    <div class="outcome-number">02</div>
+    <h2 class="outcome-title">Climate Change & Reducing Carbon Emissions</h2>
+    <p class="outcome-desc">Benefits of decarbonization: cleaner air and water, fewer extreme weather events, preserved ecosystems, new green jobs, energy independence. Reduced emissions slow global warming, protect coastal communities, and secure food and water supplies for future generations.</p>
+  </div>
+
+  <div class="outcome-card">
+    <div class="outcome-number">03</div>
+    <h2 class="outcome-title">Benefits of Ending Racism and Sexism</h2>
+    <p class="outcome-desc">When racism and sexism are dismantled: full participation of all people in the economy and civic life, higher productivity, reduced healthcare disparities, stronger communities. Equal opportunity unlocks talent that was previously suppressed — a more just society is also a more prosperous one.</p>
+  </div>
+</main>
+
+</body>
+</html>
