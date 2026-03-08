@@ -214,6 +214,7 @@
   .nav-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
+    max-width: 1100px;
     gap: 16px;
     max-width: 900px;
     width: 100%;
@@ -258,6 +259,7 @@
   .nav-card:nth-child(2)::before { background: linear-gradient(90deg, #ff6b35, #ffd700); }
   .nav-card:nth-child(3)::before { background: linear-gradient(90deg, #ffd700, #4ade80); }
   .nav-card:nth-child(4)::before { background: linear-gradient(90deg, #4ade80, #3b82f6); }
+  .nav-card:nth-child(5)::before { background: linear-gradient(90deg, #3b82f6, #a78bfa); }
 
   .nav-icon {
     font-size: 2rem;
@@ -388,9 +390,11 @@
 <body>
 
 <header class="top-header">
+  <a href="index.html">Home</a>
   <a href="timeline.html">Timeline</a>
   <a href="todays-problems.html">Today's Problems</a>
   <a href="actionables.html">Actionables</a>
+  <a href="culture.html">Culture</a>
   <a href="future.html">Future</a>
 </header>
 
@@ -428,6 +432,13 @@
       <div class="nav-label">Act</div>
       <div class="nav-title">Actionables</div>
       <div class="nav-desc">Concrete steps filtered to your income, age, and gender. What you can do right now — from voting to investing to community building.</div>
+      <span class="nav-arrow">→</span>
+    </a>
+    <a class="nav-card" href="culture.html">
+      <span class="nav-icon">🌍</span>
+      <div class="nav-label">Explore</div>
+      <div class="nav-title">Culture</div>
+      <div class="nav-desc">Ethnicities, Woman Power, Alt culture, Pride, and more — the diverse cultures that shape our world.</div>
       <span class="nav-arrow">→</span>
     </a>
     <a class="nav-card" href="future.html">

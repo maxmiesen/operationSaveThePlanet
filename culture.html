@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Culture — Operation: Save The Planet</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@300;400;500;700&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050508;
+    --green-bright: #4ade80;
+    --green-neon: #00ff66;
+    --text: #e8e6e1;
+    --text-muted: #6b6b6b;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+  }
+
+  .top-header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    padding: 1rem 24px;
+    background: rgba(5, 5, 8, 0.9);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .top-header a {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 500;
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.3s, border-color 0.3s;
+    padding: 6px 0;
+    border-bottom: 2px solid transparent;
+  }
+  .top-header a:hover {
+    color: var(--green-bright);
+    border-bottom-color: var(--green-bright);
+  }
+
+  .page {
+    padding: 100px 24px 80px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .page-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
+    letter-spacing: 0.04em;
+    color: #fff;
+    margin-bottom: 48px;
+  }
+  .page-title .green { color: var(--green-neon); }
+
+  .culture-section {
+    margin-bottom: 48px;
+  }
+
+  .section-label {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 500;
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+
+  .culture-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+  }
+
+  .culture-item {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 12px;
+    padding: 20px;
+    transition: border-color 0.3s, background 0.3s;
+  }
+  .culture-item:hover {
+    background: rgba(255,255,255,0.04);
+    border-color: rgba(74,222,128,0.2);
+  }
+  .culture-item-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem;
+    letter-spacing: 0.04em;
+    color: #fff;
+  }
+
+  .culture-section.standalone .culture-grid {
+    grid-template-columns: 1fr;
+  }
+</style>
+</head>
+<body>
+
+<header class="top-header">
+  <a href="index.html">Home</a>
+  <a href="timeline.html">Timeline</a>
+  <a href="todays-problems.html">Today's Problems</a>
+  <a href="actionables.html">Actionables</a>
+  <a href="culture.html">Culture</a>
+  <a href="future.html">Future</a>
+</header>
+
+<main class="page">
+  <h1 class="page-title">Culture</h1>
+
+  <section class="culture-section">
+    <div class="section-label">Ethnicities</div>
+    <div class="culture-grid">
+      <div class="culture-item"><span class="culture-item-title">Black culture</span></div>
+      <div class="culture-item"><span class="culture-item-title">Asian culture</span></div>
+      <div class="culture-item"><span class="culture-item-title">Middle Eastern culture</span></div>
+      <div class="culture-item"><span class="culture-item-title">White culture</span></div>
+      <div class="culture-item"><span class="culture-item-title">Native American culture</span></div>
+      <div class="culture-item"><span class="culture-item-title">LatinX culture</span></div>
+    </div>
+  </section>
+
+  <section class="culture-section standalone">
+    <div class="section-label">Identity & Community</div>
+    <div class="culture-grid">
+      <div class="culture-item"><span class="culture-item-title">Woman Power and female culture</span></div>
+      <div class="culture-item"><span class="culture-item-title">Alt culture</span></div>
+      <div class="culture-item"><span class="culture-item-title">Pride culture</span></div>
+    </div>
+  </section>
+</main>
+
+</body>
+</html>

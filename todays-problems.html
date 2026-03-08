@@ -43,6 +43,37 @@
   }
   html.embedded { overflow: hidden; height: 100%; }
 
+  .top-header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    padding: 1rem 24px;
+    background: rgba(5, 5, 8, 0.9);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  body.embedded .top-header { display: none; }
+  .top-header a {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.3s, border-color 0.3s;
+    padding: 6px 0;
+    border-bottom: 2px solid transparent;
+  }
+  .top-header a:hover {
+    color: var(--accent-teal);
+    border-bottom-color: var(--accent-teal);
+  }
+
   .noise-overlay {
     position: fixed;
     top: 0; left: 0;
@@ -61,7 +92,7 @@
     align-items: center;
     justify-content: center;
     position: relative;
-    padding: 60px 20px;
+    padding: 100px 20px 60px;
   }
 
   .hero::before {
@@ -724,6 +755,15 @@
 </style>
 </head>
 <body>
+
+<nav class="top-header">
+  <a href="index.html">Home</a>
+  <a href="timeline.html">Timeline</a>
+  <a href="todays-problems.html">Today's Problems</a>
+  <a href="actionables.html">Actionables</a>
+  <a href="culture.html">Culture</a>
+  <a href="future.html">Future</a>
+</nav>
 
 <div class="noise-overlay"></div>
 

@@ -29,29 +29,30 @@
   body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); overflow-x:hidden; }
   body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:9999; opacity:0.025; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
 
-  /* ===== NAV ===== */
-  .top-nav {
+  /* ===== TOP HEADER ===== */
+  .top-header {
     position:fixed; top:0; left:0; right:0; z-index:100;
-    display:flex; align-items:center; justify-content:space-between;
-    padding:16px 48px;
-    background:rgba(5,5,8,0.85);
+    display:flex; align-items:center; justify-content:center;
+    gap:2rem;
+    padding:1rem 24px;
+    background:rgba(5,5,8,0.9);
     backdrop-filter:blur(20px);
     -webkit-backdrop-filter:blur(20px);
     border-bottom:1px solid var(--border);
   }
-  .top-nav a {
-    font-family:'JetBrains Mono',monospace;
-    font-size:0.6rem;
-    letter-spacing:0.2em;
+  .top-header a {
+    font-family:'Oswald',sans-serif;
+    font-weight:500;
+    font-size:0.85rem;
+    letter-spacing:0.15em;
     text-transform:uppercase;
     color:var(--text-muted);
     text-decoration:none;
-    transition:color 0.3s;
+    transition:color 0.3s, border-color 0.3s;
     padding:6px 0;
+    border-bottom:2px solid transparent;
   }
-  .top-nav a:hover { color:var(--green-neon); }
-  .top-nav a.active { color:var(--green-neon); }
-  .nav-links { display:flex; gap:28px; }
+  .top-header a:hover, .top-header a.active { color:var(--green-neon); border-bottom-color:var(--green-neon); }
 
   /* ===== HERO ===== */
   .hero {
@@ -439,8 +440,7 @@
   }
 
   @media(max-width:768px) {
-    .top-nav { padding:12px 20px; }
-    .nav-links { gap:16px; }
+    .top-header { padding:12px 20px; gap:1rem; flex-wrap:wrap; justify-content:center; }
     .section { padding:60px 20px 60px; }
     .leaders-grid, .waves-grid { grid-template-columns:1fr; }
     .hero { padding:100px 20px 60px; }
@@ -453,14 +453,14 @@
 <body>
 
 <!-- NAV -->
-<nav class="top-nav" id="top">
-  <a href="index.html">← Back to Mission</a>
-  <div class="nav-links">
-    <a href="#drugs">War on Drugs</a>
-    <a href="#civil">Civil Rights</a>
-    <a href="#feminism">Feminism</a>
-  </div>
-</nav>
+<header class="top-header">
+  <a href="index.html">Home</a>
+  <a href="timeline.html" class="active">Timeline</a>
+  <a href="todays-problems.html">Today's Problems</a>
+  <a href="actionables.html">Actionables</a>
+  <a href="culture.html">Culture</a>
+  <a href="future.html">Future</a>
+</header>
 
 <!-- HERO -->
 <section class="hero" id="hero">
@@ -669,20 +669,6 @@
 </footer>
 
 <script>
-// Highlight active nav on scroll
-const sections = document.querySelectorAll('.section');
-const navLinks = document.querySelectorAll('.nav-links a');
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      navLinks.forEach(l => l.classList.remove('active'));
-      const id = entry.target.id;
-      const link = document.querySelector(`.nav-links a[href="#${id}"]`);
-      if (link) link.classList.add('active');
-    }
-  });
-}, { threshold: 0.3 });
-sections.forEach(s => observer.observe(s));
 </script>
 
 </body>
