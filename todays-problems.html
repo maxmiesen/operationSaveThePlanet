@@ -4,13 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Today's Problems</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg-deep: #0a0a0f;
-    --bg-mid: #12121a;
+    --bg-deep: #08080c;
+    --bg-mid: #0e0e14;
     --text-primary: #e8e6e1;
-    --text-muted: #8a8790;
+    --text-secondary: #a09da6;
+    --text-muted: #5a5760;
+    --accent-green: #4ade80;
     --accent-red: #e63946;
     --accent-amber: #f4a261;
     --accent-teal: #2ec4b6;
@@ -57,6 +59,34 @@
     border-bottom: 1px solid rgba(255,255,255,0.04);
   }
   body.embedded .top-header { display: none; }
+  /* Knowledge dropdown */
+  .nav-dropdown { position: relative; }
+  .nav-dropdown-trigger {
+    font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 0.85rem;
+    letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted);
+    cursor: pointer; padding: 6px 0; border-bottom: 2px solid transparent;
+    transition: color 0.3s, border-color 0.3s; display: flex; align-items: center; gap: 4px;
+  }
+  .nav-dropdown-trigger::after { content: '▾'; font-size: 0.7em; opacity: 0.7; }
+  .nav-dropdown:hover .nav-dropdown-trigger, .nav-dropdown.active .nav-dropdown-trigger {
+    color: var(--accent-green); border-bottom-color: var(--accent-green);
+  }
+  .nav-dropdown-menu {
+    position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+    margin-top: 8px; min-width: 220px;
+    background: rgba(10,10,14,0.98); backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.06); border-radius: 8px;
+    padding: 8px 0; opacity: 0; visibility: hidden;
+    transition: opacity 0.2s, visibility 0.2s;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+  }
+  .nav-dropdown:hover .nav-dropdown-menu { opacity: 1; visibility: visible; }
+  .nav-dropdown-menu a {
+    display: block; padding: 10px 20px; font-size: 0.8rem;
+    letter-spacing: 0.1em; color: var(--text-muted); text-decoration: none;
+    border-bottom: none; transition: color 0.2s, background 0.2s;
+  }
+  .nav-dropdown-menu a:hover { color: var(--accent-green); background: rgba(74,222,128,0.08); }
   .top-header a {
     font-family: 'DM Sans', sans-serif;
     font-weight: 500;
@@ -70,8 +100,8 @@
     border-bottom: 2px solid transparent;
   }
   .top-header a:hover {
-    color: var(--accent-teal);
-    border-bottom-color: var(--accent-teal);
+    color: var(--accent-green);
+    border-bottom-color: var(--accent-green);
   }
 
   .noise-overlay {
@@ -758,11 +788,17 @@
 
 <nav class="top-header">
   <a href="index.html">Home</a>
-  <a href="timeline.html">Timeline</a>
-  <a href="todays-problems.html">Today's Problems</a>
-  <a href="actionables.html">Actionables</a>
-  <a href="culture.html">Culture</a>
+  <div class="nav-dropdown active">
+    <span class="nav-dropdown-trigger">Knowledge</span>
+    <div class="nav-dropdown-menu">
+      <a href="timeline.html">History timeline</a>
+      <a href="todays-problems.html">Today's societal issues</a>
+      <a href="actionables.html">Actionables</a>
+      <a href="culture.html">Culture</a>
+    </div>
+  </div>
   <a href="future.html">Future</a>
+  <a href="philafolio.html">My Philafolio</a>
 </nav>
 
 <div class="noise-overlay"></div>

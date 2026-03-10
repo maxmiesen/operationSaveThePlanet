@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RALLY — Protest Finder</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=JetBrains+Mono:wght@400;500;700&family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #08080f;
+    --surface: #12121f;
+    --surface2: #1a1a2e;
+    --border: #ffffff08;
+    --border-light: #ffffff10;
+    --text: #e6f1ff;
+    --text-muted: #8892b0;
+    --text-dim: #606a86;
+    --text-ghost: #4a5568;
+    --text-void: #2a2a4a;
+    --red: #FF4655;
+    --pink: #E84393;
+    --purple: #6C5CE7;
+    --green: #00B894;
+    --teal: #00CEC9;
+    --orange: #E17055;
+    --gold: #FDCB6E;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  ::selection { background: var(--red); color: #fff; }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--text-void); border-radius: 3px; }
+
+  input::placeholder { color: var(--text-ghost); }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  @keyframes heroGlow {
+    0%, 100% { opacity: 0.3; filter: blur(80px); }
+    50% { opacity: 0.5; filter: blur(100px); }
+  }
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* ─── AMBIENT GLOW ─── */
+  .ambient-glow {
+    position: fixed;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    height: 600px;
+    background: radial-gradient(ellipse, #FF465520 0%, transparent 70%);
+    animation: heroGlow 8s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ─── TICKER ─── */
+  .ticker {
+    background: var(--red);
+    padding: 8px 0;
+    overflow: hidden;
+    position: relative;
+    z-index: 10;
+  }
+  .ticker-inner {
+    display: flex;
+    white-space: nowrap;
+    animation: marquee 30s linear infinite;
+  }
+  .ticker-text {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    color: #fff;
+  }
+
+  /* ─── NAV ─── */
+  .top-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 40px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    z-index: 10;
+    background: #08080fcc;
+    backdrop-filter: blur(20px);
+  }
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .nav-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--red), var(--pink));
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 900;
+  }
+  .nav-title {
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    background: linear-gradient(135deg, var(--red), var(--pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .nav-status {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+  }
+  .nav-status-label {
+    font-size: 13px;
+    color: var(--text-dim);
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 12px var(--green);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  /* ─── HERO ─── */
+  .hero-area {
+    padding: 60px 40px 40px;
+    text-align: center;
+    position: relative;
+    z-index: 10;
+  }
+  .hero-area h1 {
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    animation: fadeUp 0.6s ease both;
+  }
+  .hero-area h1 .gradient-text {
+    background: linear-gradient(135deg, var(--red), var(--purple), var(--teal));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero-area .sub {
+    font-size: 18px;
+    color: var(--text-dim);
+    max-width: 500px;
+    margin: 0 auto 40px;
+    line-height: 1.6;
+    animation: fadeUp 0.6s ease 0.1s both;
+  }
+
+  /* ─── SEARCH BAR ─── */
+  .search-wrapper {
+    max-width: 680px;
+    margin: 0 auto;
+    animation: fadeUp 0.6s ease 0.2s both;
+  }
+  .search-bar {
+    display: flex;
+    gap: 0;
+    background: var(--surface);
+    border-radius: 16px;
+    border: 1px solid var(--border-light);
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+  }
+  .search-input-area {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    padding: 0 20px;
+  }
+  .search-input-area svg {
+    flex-shrink: 0;
+  }
+  .search-input-area input {
+    flex: 1;
+    padding: 20px 16px;
+    font-size: 17px;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+  }
+  .search-btn {
+    padding: 20px 36px;
+    font-size: 15px;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--red), var(--pink));
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .search-btn:hover { filter: brightness(1.1); }
+  .search-btn:disabled {
+    background: linear-gradient(135deg, #333, #444);
+    cursor: wait;
+  }
+  .search-btn .spinner {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 3px solid transparent;
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+
+  /* ─── CATEGORY FILTERS ─── */
+  .category-filters {
+    display: none;
+    gap: 10px;
+    padding: 0 40px 30px;
+    overflow-x: auto;
+    justify-content: center;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 10;
+    animation: fadeUp 0.4s ease both;
+  }
+  .category-filters.visible { display: flex; }
+  .cat-btn {
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 700;
+    background: var(--surface);
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .cat-btn:hover { border-color: #ffffff20; }
+  .cat-btn.active {
+    /* colors set via JS */
+  }
+
+  /* ─── LOADING ─── */
+  .loading-state {
+    display: none;
+    padding: 40px;
+    text-align: center;
+    position: relative;
+    z-index: 10;
+  }
+  .loading-state.visible { display: block; }
+  .loading-card {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 40px;
+    background: var(--surface);
+    border-radius: 20px;
+    border: 1px solid var(--border);
+  }
+  .loading-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--red), var(--pink));
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+  .loading-card h3 {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+  .loading-card p {
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+  .loading-card p strong { color: var(--text-muted); }
+  .progress-track {
+    margin-top: 24px;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--surface2);
+    overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%;
+    width: 60%;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--red), var(--pink), var(--purple));
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+
+  /* ─── ERROR ─── */
+  .error-state {
+    display: none;
+    padding: 20px 40px;
+    text-align: center;
+    position: relative;
+    z-index: 10;
+  }
+  .error-state.visible { display: block; }
+  .error-card {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px 28px;
+    background: #2a0a0f;
+    border: 1px solid #FF465530;
+    border-radius: 12px;
+    color: var(--red);
+    font-size: 15px;
+  }
+
+  /* ─── RESULTS ─── */
+  .results-area {
+    display: none;
+    padding: 10px 40px 60px;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+  .results-area.visible { display: block; }
+  .results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+  .results-header h2 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+  }
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 24px;
+  }
+
+  /* ─── EVENT CARD ─── */
+  .event-card {
+    background: linear-gradient(145deg, #141424 0%, #0f1a2e 100%);
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid var(--border);
+    animation: cardIn 0.5s ease both;
+    position: relative;
+  }
+  .event-card:hover {
+    transform: translateY(-6px) scale(1.01);
+    background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%);
+  }
+  .card-accent {
+    height: 6px;
+  }
+  .card-body {
+    padding: 24px 28px 20px;
+  }
+  .card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .card-badge {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .card-date {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+  }
+  .card-title {
+    margin: 0 0 12px 0;
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1.3;
+    font-family: 'Bebas Neue', 'DM Sans', sans-serif;
+    letter-spacing: 0.02em;
+    font-size: 22px;
+  }
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .card-meta span {
+    font-size: 14px;
+    color: var(--text-muted);
+    font-family: 'DM Sans', sans-serif;
+  }
+  .card-desc {
+    margin: 12px 0 0 0;
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.6;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .card-footer {
+    padding: 14px 28px;
+    border-top: 1px solid #ffffff06;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #0a0a18;
+  }
+  .card-footer .label {
+    font-size: 12px;
+    color: var(--text-ghost);
+    font-family: 'DM Sans', sans-serif;
+    letter-spacing: 0.5px;
+  }
+  .card-footer .details {
+    font-size: 13px;
+    font-weight: 700;
+    font-family: 'DM Sans', sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* ─── EMPTY STATE ─── */
+  .empty-state {
+    display: none;
+    padding: 60px 40px;
+    text-align: center;
+    position: relative;
+    z-index: 10;
+  }
+  .empty-state.visible { display: block; }
+  .empty-state .icon { font-size: 48px; margin-bottom: 16px; }
+  .empty-state h3 {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .empty-state p { font-size: 15px; color: var(--text-dim); }
+
+  /* ─── FOOTER ─── */
+  .app-footer {
+    padding: 30px 40px;
+    border-top: 1px solid #ffffff06;
+    text-align: center;
+    position: relative;
+    z-index: 10;
+  }
+  .app-footer p {
+    font-size: 12px;
+    color: var(--text-void);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 768px) {
+    .top-nav { padding: 16px 20px; }
+    .hero-area { padding: 40px 20px 30px; }
+    .search-bar { flex-direction: column; border-radius: 14px; }
+    .search-btn { border-radius: 0 0 14px 14px; }
+    .category-filters { padding: 0 20px 20px; }
+    .results-area { padding: 10px 20px 40px; }
+    .results-grid { grid-template-columns: 1fr; }
+    .nav-status-label { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Ambient Glow -->
+<div class="ambient-glow"></div>
+
+<!-- Ticker -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-text">FIND YOUR VOICE&nbsp;&nbsp;✊&nbsp;&nbsp;STAND UP&nbsp;&nbsp;☮️&nbsp;&nbsp;MARCH FORWARD&nbsp;&nbsp;⚖️&nbsp;&nbsp;DEMAND CHANGE&nbsp;&nbsp;🌍&nbsp;&nbsp;POWER TO THE PEOPLE&nbsp;&nbsp;♀️&nbsp;&nbsp;</span>
+    <span class="ticker-text">FIND YOUR VOICE&nbsp;&nbsp;✊&nbsp;&nbsp;STAND UP&nbsp;&nbsp;☮️&nbsp;&nbsp;MARCH FORWARD&nbsp;&nbsp;⚖️&nbsp;&nbsp;DEMAND CHANGE&nbsp;&nbsp;🌍&nbsp;&nbsp;POWER TO THE PEOPLE&nbsp;&nbsp;♀️&nbsp;&nbsp;</span>
+    <span class="ticker-text">FIND YOUR VOICE&nbsp;&nbsp;✊&nbsp;&nbsp;STAND UP&nbsp;&nbsp;☮️&nbsp;&nbsp;MARCH FORWARD&nbsp;&nbsp;⚖️&nbsp;&nbsp;DEMAND CHANGE&nbsp;&nbsp;🌍&nbsp;&nbsp;POWER TO THE PEOPLE&nbsp;&nbsp;♀️&nbsp;&nbsp;</span>
+    <span class="ticker-text">FIND YOUR VOICE&nbsp;&nbsp;✊&nbsp;&nbsp;STAND UP&nbsp;&nbsp;☮️&nbsp;&nbsp;MARCH FORWARD&nbsp;&nbsp;⚖️&nbsp;&nbsp;DEMAND CHANGE&nbsp;&nbsp;🌍&nbsp;&nbsp;POWER TO THE PEOPLE&nbsp;&nbsp;♀️&nbsp;&nbsp;</span>
+  </div>
+</div>
+
+<!-- Nav -->
+<nav class="top-nav">
+  <div class="nav-brand">
+    <div class="nav-icon">✊</div>
+    <span class="nav-title">RALLY</span>
+  </div>
+  <div class="nav-status">
+    <span class="nav-status-label">Powered by AI</span>
+    <div class="status-dot"></div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="hero-area">
+  <h1>Discover protests<br><span class="gradient-text">near you</span></h1>
+  <p class="sub">AI-powered search finds upcoming rallies, marches, and demonstrations in real time.</p>
+
+  <!-- Search Bar -->
+  <div class="search-wrapper">
+    <div class="search-bar">
+      <div class="search-input-area">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4a5568" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input type="text" id="cityInput" value="Los Angeles" placeholder="Enter city or region...">
+      </div>
+      <button class="search-btn" id="searchBtn" onclick="searchProtests()">Find Events</button>
+    </div>
+  </div>
+</div>
+
+<!-- Category Filters -->
+<div class="category-filters" id="categoryFilters"></div>
+
+<!-- Loading -->
+<div class="loading-state" id="loadingState">
+  <div class="loading-card">
+    <div class="loading-icon">🔍</div>
+    <h3>Searching the web...</h3>
+    <p>AI is scanning news sites, organizer pages, and social media for upcoming events near <strong id="loadingCity"></strong></p>
+    <div class="progress-track">
+      <div class="progress-bar"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Error -->
+<div class="error-state" id="errorState">
+  <div class="error-card" id="errorMessage"></div>
+</div>
+
+<!-- Results -->
+<div class="results-area" id="resultsArea">
+  <div class="results-header">
+    <h2 id="resultsCount"></h2>
+  </div>
+  <div class="results-grid" id="resultsGrid"></div>
+</div>
+
+<!-- Empty -->
+<div class="empty-state" id="emptyState">
+  <div class="icon">🔇</div>
+  <h3>No events found</h3>
+  <p>Try a different city or broaden your search area</p>
+</div>
+
+<!-- Footer -->
+<div class="app-footer">
+  <p>RALLY · AI-Powered Protest Discovery · Exercise Your Rights</p>
+</div>
+
+<!-- ─── JAVASCRIPT ─── -->
+<script>
+(function() {
+  'use strict';
+
+  /* ─── DATA ─── */
+  var CATEGORIES = [
+    { id: 'all',         label: 'All Events',      icon: '✊'  },
+    { id: 'antiwar',     label: 'Anti-War',         icon: '☮️'  },
+    { id: 'immigration', label: 'Immigration',      icon: '🗽' },
+    { id: 'climate',     label: 'Climate',          icon: '🌍' },
+    { id: 'labor',       label: 'Labor & Workers',  icon: '⚙️'  },
+    { id: 'rights',      label: 'Civil Rights',     icon: '⚖️'  },
+    { id: 'womens',      label: "Women's Rights",   icon: '♀️'  }
+  ];
+
+  var categoryColors = {
+    all:         '#FF4655',
+    antiwar:     '#6C5CE7',
+    immigration: '#00B894',
+    climate:     '#00CEC9',
+    labor:       '#E17055',
+    rights:      '#FDCB6E',
+    womens:      '#E84393'
+  };
+
+  var state = {
+    city: 'Los Angeles',
+    events: [],
+    loading: false,
+    error: '',
+    activeCategory: 'all',
+    searched: false
+  };
+
+  /* ─── DOM REFS ─── */
+  var cityInput       = document.getElementById('cityInput');
+  var searchBtn       = document.getElementById('searchBtn');
+  var categoryFilters = document.getElementById('categoryFilters');
+  var loadingState    = document.getElementById('loadingState');
+  var loadingCity     = document.getElementById('loadingCity');
+  var errorState      = document.getElementById('errorState');
+  var errorMessage    = document.getElementById('errorMessage');
+  var resultsArea     = document.getElementById('resultsArea');
+  var resultsCount    = document.getElementById('resultsCount');
+  var resultsGrid     = document.getElementById('resultsGrid');
+  var emptyState      = document.getElementById('emptyState');
+
+  /* ─── INIT ─── */
+  cityInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') searchProtests();
+  });
+
+  buildCategoryButtons();
+
+  /* ─── CATEGORY BUTTONS ─── */
+  function buildCategoryButtons() {
+    categoryFilters.innerHTML = '';
+    CATEGORIES.forEach(function(cat) {
+      var btn = document.createElement('button');
+      btn.className = 'cat-btn' + (state.activeCategory === cat.id ? ' active' : '');
+      btn.textContent = cat.icon + ' ' + cat.label;
+      btn.setAttribute('data-cat', cat.id);
+
+      var color = categoryColors[cat.id];
+      if (state.activeCategory === cat.id) {
+        btn.style.background = color + '25';
+        btn.style.color = color;
+        btn.style.borderColor = color + '55';
+      }
+
+      btn.addEventListener('click', function() {
+        state.activeCategory = cat.id;
+        buildCategoryButtons();
+        renderResults();
+      });
+
+      categoryFilters.appendChild(btn);
+    });
+  }
+
+  /* ─── PARSE EVENTS FROM AI TEXT ─── */
+  function parseEvents(text) {
+    var events = [];
+    var currentEvent = null;
+    var lines = text.split('\n');
+
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i];
+      var eventMatch = line.match(/^\d+[\.\)]\s*\*?\*?(.+?)(?:\*?\*?)?\s*$/);
+
+      if (eventMatch &&
+          !line.toLowerCase().includes('date:') &&
+          !line.toLowerCase().includes('location:') &&
+          !line.toLowerCase().includes('time:')) {
+        if (currentEvent && currentEvent.name) {
+          events.push(currentEvent);
+        }
+        currentEvent = {
+          name: eventMatch[1].replace(/\*\*/g, '').trim(),
+          date: '', location: '', description: '',
+          category: 'all', time: '', organizer: ''
+        };
+      }
+
+      if (currentEvent) {
+        var dateLine = line.match(/(?:date|when|scheduled)[:\s]*(.+)/i);
+        var locLine  = line.match(/(?:location|where|venue|place)[:\s]*(.+)/i);
+        var timeLine = line.match(/(?:time|starts?|begins?)[:\s]*(.+)/i);
+        var descLine = line.match(/(?:description|details|about|info|summary)[:\s]*(.+)/i);
+        var orgLine  = line.match(/(?:organizer|organized by|hosted by|group)[:\s]*(.+)/i);
+        var catLine  = line.match(/(?:category|type|cause|topic)[:\s]*(.+)/i);
+
+        if (dateLine) currentEvent.date        = dateLine[1].replace(/\*\*/g, '').trim();
+        if (locLine)  currentEvent.location     = locLine[1].replace(/\*\*/g, '').trim();
+        if (timeLine) currentEvent.time         = timeLine[1].replace(/\*\*/g, '').trim();
+        if (descLine) currentEvent.description  = descLine[1].replace(/\*\*/g, '').trim();
+        if (orgLine)  currentEvent.organizer    = orgLine[1].replace(/\*\*/g, '').trim();
+        if (catLine) {
+          var cat = catLine[1].toLowerCase();
+          if (cat.includes('war') || cat.includes('peace') || cat.includes('anti-war'))
+            currentEvent.category = 'antiwar';
+          else if (cat.includes('immig') || cat.includes('ice') || cat.includes('deport'))
+            currentEvent.category = 'immigration';
+          else if (cat.includes('climate') || cat.includes('environment') || cat.includes('science'))
+            currentEvent.category = 'climate';
+          else if (cat.includes('labor') || cat.includes('worker') || cat.includes('union'))
+            currentEvent.category = 'labor';
+          else if (cat.includes('civil') || cat.includes('racial') || cat.includes('justice') || cat.includes('blm'))
+            currentEvent.category = 'rights';
+          else if (cat.includes('women') || cat.includes('feminist') || cat.includes('reproductive'))
+            currentEvent.category = 'womens';
+        }
+      }
+    }
+
+    if (currentEvent && currentEvent.name) events.push(currentEvent);
+    return events.filter(function(e) { return e.name && e.name.length > 3; });
+  }
+
+  /* ─── SEARCH ─── */
+  window.searchProtests = async function() {
+    var city = cityInput.value.trim();
+    if (!city) return;
+
+    state.city = city;
+    state.loading = true;
+    state.error = '';
+    state.events = [];
+    state.searched = true;
+    state.activeCategory = 'all';
+
+    updateUI();
+
+    try {
+      var response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 4000,
+          tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+          system: 'You are a protest and demonstration event finder. Search the web for upcoming protests, rallies, marches, demonstrations, and activist events. Today\'s date is March 9, 2026.\n\nIMPORTANT: You MUST format your final response as a numbered list of events. For EACH event, include these fields on separate lines:\n1. Event Name\n- Date: [specific date]\n- Time: [time if known]\n- Location: [specific venue/address/area]\n- Organizer: [organizing group]\n- Description: [1-2 sentence description]\n- Category: [one of: anti-war, immigration, climate, labor, civil rights, women\'s rights, other]\n\nSearch thoroughly using multiple queries to find diverse events. Include events from the next 30 days. Find at least 6-10 events if possible.',
+          messages: [{
+            role: 'user',
+            content: 'Find all upcoming protests, rallies, marches, and demonstrations in or near ' + city + ' in the next 30 days (March-April 2026). Search for anti-war protests, immigration rallies, climate marches, labor actions, civil rights demonstrations, women\'s rights events, and any other activist gatherings. Be thorough and use multiple searches.'
+          }]
+        })
+      });
+
+      var data = await response.json();
+
+      if (data.error) {
+        state.error = data.error.message || 'API error occurred';
+        state.loading = false;
+        updateUI();
+        return;
+      }
+
+      var textBlocks = (data.content || [])
+        .filter(function(b) { return b.type === 'text'; })
+        .map(function(b) { return b.text; })
+        .join('\n');
+
+      var parsed = parseEvents(textBlocks);
+
+      if (parsed.length === 0 && textBlocks.length > 0) {
+        var fallbackEvents = [];
+        var fLines = textBlocks.split('\n');
+        var tempEvent = null;
+
+        for (var j = 0; j < fLines.length; j++) {
+          var cleaned = fLines[j].replace(/\*\*/g, '').trim();
+          if (cleaned.match(/^\d+[\.\)]\s/) || cleaned.match(/^[-•]\s*[A-Z]/)) {
+            if (tempEvent) fallbackEvents.push(tempEvent);
+            tempEvent = {
+              name: cleaned.replace(/^\d+[\.\)]\s*/, '').replace(/^[-•]\s*/, ''),
+              date: '', location: city, description: '',
+              category: 'all', time: '', organizer: ''
+            };
+          } else if (tempEvent) {
+            if (cleaned.toLowerCase().includes('march') || cleaned.match(/\d{1,2}[\/\-]\d{1,2}/)) {
+              if (!tempEvent.date) tempEvent.date = cleaned;
+            } else if (cleaned.length > 20 && !tempEvent.description) {
+              tempEvent.description = cleaned;
+            }
+          }
+        }
+        if (tempEvent) fallbackEvents.push(tempEvent);
+
+        if (fallbackEvents.length > 0) {
+          state.events = fallbackEvents;
+        } else {
+          state.events = [{
+            name: 'Search Results',
+            date: '', location: city,
+            description: textBlocks.slice(0, 300),
+            category: 'all', time: '', organizer: ''
+          }];
+        }
+      } else {
+        state.events = parsed;
+      }
+    } catch (err) {
+      state.error = 'Failed to search. Please try again.';
+      console.error(err);
+    }
+
+    state.loading = false;
+    updateUI();
+  };
+
+  /* ─── RENDER EVENT CARD ─── */
+  function createEventCard(event, index) {
+    var color = categoryColors[event.category] || categoryColors.all;
+    var catObj = CATEGORIES.find(function(c) { return c.id === event.category; }) || CATEGORIES[0];
+
+    var card = document.createElement('div');
+    card.className = 'event-card';
+    card.style.animationDelay = (index * 80) + 'ms';
+    card.style.boxShadow = '0 4px 20px rgba(0,0,0,0.3)';
+
+    card.addEventListener('mouseenter', function() {
+      card.style.boxShadow = '0 20px 60px ' + color + '22, 0 8px 24px rgba(0,0,0,0.4)';
+      card.style.borderColor = color + '44';
+    });
+    card.addEventListener('mouseleave', function() {
+      card.style.boxShadow = '0 4px 20px rgba(0,0,0,0.3)';
+      card.style.borderColor = 'var(--border)';
+    });
+
+    var html = '';
+    html += '<div class="card-accent" style="background:linear-gradient(90deg,' + color + ',' + color + '88)"></div>';
+    html += '<div class="card-body">';
+    html += '<div class="card-top">';
+    html += '<span class="card-badge" style="color:' + color + ';background:' + color + '15">' + catObj.icon + ' ' + catObj.label + '</span>';
+    if (event.date) html += '<span class="card-date">' + escapeHtml(event.date) + '</span>';
+    html += '</div>';
+    html += '<h3 class="card-title">' + escapeHtml(event.name) + '</h3>';
+
+    if (event.location) {
+      html += '<div class="card-meta">';
+      html += '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8892b0" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>';
+      html += '<span>' + escapeHtml(event.location) + '</span>';
+      html += '</div>';
+    }
+
+    if (event.time) {
+      html += '<div class="card-meta">';
+      html += '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8892b0" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
+      html += '<span>' + escapeHtml(event.time) + '</span>';
+      html += '</div>';
+    }
+
+    if (event.organizer) {
+      html += '<div class="card-meta">';
+      html += '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8892b0" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>';
+      html += '<span>' + escapeHtml(event.organizer) + '</span>';
+      html += '</div>';
+    }
+
+    if (event.description) {
+      var desc = event.description.length > 160 ? event.description.slice(0, 160) + '…' : event.description;
+      html += '<p class="card-desc">' + escapeHtml(desc) + '</p>';
+    }
+
+    html += '</div>';
+    html += '<div class="card-footer">';
+    html += '<span class="label">FREE · PUBLIC EVENT</span>';
+    html += '<span class="details" style="color:' + color + '">Details <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></span>';
+    html += '</div>';
+
+    card.innerHTML = html;
+    return card;
+  }
+
+  /* ─── RENDER RESULTS ─── */
+  function renderResults() {
+    var filtered = state.activeCategory === 'all'
+      ? state.events
+      : state.events.filter(function(e) { return e.category === state.activeCategory; });
+
+    resultsGrid.innerHTML = '';
+
+    if (filtered.length > 0) {
+      resultsArea.classList.add('visible');
+      emptyState.classList.remove('visible');
+      resultsCount.textContent = filtered.length + ' event' + (filtered.length !== 1 ? 's' : '') + ' found near ' + state.city;
+      filtered.forEach(function(event, i) {
+        resultsGrid.appendChild(createEventCard(event, i));
+      });
+    } else if (state.searched && state.events.length === 0 && !state.error) {
+      resultsArea.classList.remove('visible');
+      emptyState.classList.add('visible');
+    } else {
+      resultsArea.classList.remove('visible');
+      emptyState.classList.remove('visible');
+    }
+  }
+
+  /* ─── UPDATE UI ─── */
+  function updateUI() {
+    // Loading
+    if (state.loading) {
+      loadingState.classList.add('visible');
+      loadingCity.textContent = state.city;
+      searchBtn.disabled = true;
+      searchBtn.innerHTML = '<span class="spinner"></span> Searching...';
+    } else {
+      loadingState.classList.remove('visible');
+      searchBtn.disabled = false;
+      searchBtn.textContent = 'Find Events';
+    }
+
+    // Error
+    if (state.error) {
+      errorState.classList.add('visible');
+      errorMessage.textContent = state.error;
+    } else {
+      errorState.classList.remove('visible');
+    }
+
+    // Filters
+    if (state.searched && !state.loading) {
+      categoryFilters.classList.add('visible');
+    } else {
+      categoryFilters.classList.remove('visible');
+    }
+
+    buildCategoryButtons();
+    renderResults();
+  }
+
+  /* ─── ESCAPE HTML ─── */
+  function escapeHtml(str) {
+    var div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
+  }
+
+})();
+</script>
+</body>
+</html>

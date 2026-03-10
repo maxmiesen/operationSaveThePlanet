@@ -16,13 +16,13 @@
     --text-primary: #e8e6e1;
     --text-secondary: #a09da6;
     --text-muted: #5a5760;
-    --accent-ember: #ff6b35;
-    --accent-gold: #ffd700;
+    --accent-green: #4ade80;
     --accent-teal: #2ec4b6;
+    --accent-gold: #ffd700;
+    --accent-neon: #00ff66;
     --accent-rose: #e63946;
     --accent-blue: #4a90d9;
     --accent-violet: #9b72f0;
-    --accent-green: #4ade80;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -73,9 +73,38 @@
     border-bottom: 2px solid transparent;
   }
   .top-header a:hover {
-    color: var(--accent-teal);
-    border-bottom-color: var(--accent-teal);
+    color: var(--accent-green);
+    border-bottom-color: var(--accent-green);
   }
+
+  /* Knowledge dropdown */
+  .nav-dropdown { position: relative; }
+  .nav-dropdown-trigger {
+    font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 0.85rem;
+    letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted);
+    cursor: pointer; padding: 6px 0; border-bottom: 2px solid transparent;
+    transition: color 0.3s, border-color 0.3s; display: flex; align-items: center; gap: 4px;
+  }
+  .nav-dropdown-trigger::after { content: '▾'; font-size: 0.7em; opacity: 0.7; }
+  .nav-dropdown:hover .nav-dropdown-trigger, .nav-dropdown.active .nav-dropdown-trigger {
+    color: var(--accent-green); border-bottom-color: var(--accent-green);
+  }
+  .nav-dropdown-menu {
+    position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+    margin-top: 8px; min-width: 220px;
+    background: rgba(10,10,14,0.98); backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.06); border-radius: 8px;
+    padding: 8px 0; opacity: 0; visibility: hidden;
+    transition: opacity 0.2s, visibility 0.2s;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+  }
+  .nav-dropdown:hover .nav-dropdown-menu { opacity: 1; visibility: visible; }
+  .nav-dropdown-menu a {
+    display: block; padding: 10px 20px; font-size: 0.8rem;
+    letter-spacing: 0.1em; color: var(--text-muted); text-decoration: none;
+    border-bottom: none; transition: color 0.2s, background 0.2s;
+  }
+  .nav-dropdown-menu a:hover { color: var(--accent-green); background: rgba(74,222,128,0.08); }
 
   /* ===== HEADER ===== */
   .page-header {
@@ -89,7 +118,7 @@
     position: absolute;
     top: 0; left: 0; right: 0;
     height: 2px;
-    background: linear-gradient(90deg, var(--accent-ember), var(--accent-gold), var(--accent-teal), var(--accent-violet));
+    background: linear-gradient(90deg, #2d7a2d, var(--accent-green), var(--accent-teal), var(--accent-gold));
   }
   .breadcrumb {
     font-family: 'JetBrains Mono', monospace;
@@ -104,8 +133,8 @@
     text-decoration: none;
     transition: color 0.3s;
   }
-  .breadcrumb a:hover { color: var(--accent-ember); }
-  .breadcrumb span { color: var(--accent-ember); }
+  .breadcrumb a:hover { color: var(--accent-green); }
+  .breadcrumb span { color: var(--accent-green); }
   .page-title {
     font-family: 'Playfair Display', serif;
     font-weight: 900;
@@ -116,7 +145,7 @@
   }
   .page-title em {
     font-style: normal;
-    background: linear-gradient(135deg, var(--accent-ember), var(--accent-gold));
+    background: linear-gradient(135deg, var(--accent-green), var(--accent-teal));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -171,12 +200,12 @@
     width: 5px;
     height: 5px;
     border-radius: 50%;
-    background: var(--accent-ember);
+    background: var(--accent-green);
   }
   .filter-label .count {
     margin-left: auto;
-    background: rgba(255,107,53,0.1);
-    color: var(--accent-ember);
+    background: rgba(74,222,128,0.1);
+    color: var(--accent-green);
     padding: 1px 7px;
     border-radius: 100px;
     font-size: 0.55rem;
@@ -205,11 +234,11 @@
     background: rgba(255,255,255,0.02);
   }
   .income-tier.active {
-    border-color: var(--accent-ember);
-    background: rgba(255,107,53,0.06);
+    border-color: var(--accent-green);
+    background: rgba(74,222,128,0.06);
   }
   .income-tier.active .tier-name { color: var(--text-primary); }
-  .income-tier.active .tier-range { color: var(--accent-ember); }
+  .income-tier.active .tier-range { color: var(--accent-green); }
   .income-tier.active::before {
     content: '';
     position: absolute;
@@ -219,7 +248,7 @@
     width: 3px;
     height: 60%;
     border-radius: 0 3px 3px 0;
-    background: var(--accent-ember);
+    background: var(--accent-green);
   }
   .tier-name {
     font-size: 0.82rem;
@@ -263,9 +292,9 @@
     background: rgba(255,255,255,0.02);
   }
   .pill.active {
-    border-color: rgba(255,107,53,0.4);
-    background: rgba(255,107,53,0.08);
-    color: var(--accent-ember);
+    border-color: rgba(74,222,128,0.4);
+    background: rgba(74,222,128,0.08);
+    color: var(--accent-green);
   }
 
   /* Reset button */
@@ -311,7 +340,7 @@
     color: var(--text-muted);
   }
   .results-count strong {
-    color: var(--accent-ember);
+    color: var(--accent-green);
     font-weight: 500;
   }
   .active-filters {
@@ -324,9 +353,9 @@
     font-size: 0.6rem;
     padding: 3px 10px;
     border-radius: 100px;
-    background: rgba(255,107,53,0.08);
-    color: var(--accent-ember);
-    border: 1px solid rgba(255,107,53,0.15);
+    background: rgba(74,222,128,0.08);
+    color: var(--accent-green);
+    border: 1px solid rgba(74,222,128,0.15);
   }
 
   /* Category sections */
@@ -393,7 +422,7 @@
   }
   .action-card:hover::before { opacity: 1; }
 
-  .action-card[data-cat="political"]::before { background: var(--accent-ember); }
+  .action-card[data-cat="political"]::before { background: var(--accent-green); }
   .action-card[data-cat="financial"]::before { background: var(--accent-gold); }
   .action-card[data-cat="community"]::before { background: var(--accent-teal); }
   .action-card[data-cat="personal"]::before { background: var(--accent-violet); }
@@ -448,7 +477,7 @@
     gap: 4px;
     margin-top: 10px;
     font-size: 0.72rem;
-    color: var(--accent-ember);
+    color: var(--accent-green);
     text-decoration: none;
     font-weight: 500;
     transition: gap 0.3s ease;
@@ -502,11 +531,17 @@
 
 <nav class="top-header">
   <a href="index.html">Home</a>
-  <a href="timeline.html">Timeline</a>
-  <a href="todays-problems.html">Today's Problems</a>
-  <a href="actionables.html">Actionables</a>
-  <a href="culture.html">Culture</a>
+  <div class="nav-dropdown active">
+    <span class="nav-dropdown-trigger">Knowledge</span>
+    <div class="nav-dropdown-menu">
+      <a href="timeline.html">History timeline</a>
+      <a href="todays-problems.html">Today's societal issues</a>
+      <a href="actionables.html">Actionables</a>
+      <a href="culture.html">Culture</a>
+    </div>
+  </div>
   <a href="future.html">Future</a>
+  <a href="philafolio.html">My Philafolio</a>
 </nav>
 
 <div class="page-header">
@@ -727,7 +762,7 @@ const actionables = [
 
 // ===== CATEGORY META =====
 const catMeta = {
-  political:     { icon:"🗳️", name:"Political Action",     bg:"rgba(255,107,53,0.08)", color:"var(--accent-ember)" },
+  political:     { icon:"🗳️", name:"Political Action",     bg:"rgba(74,222,128,0.08)", color:"var(--accent-green)" },
   financial:     { icon:"💰", name:"Financial Power",       bg:"rgba(255,215,0,0.08)",  color:"var(--accent-gold)" },
   community:     { icon:"🤝", name:"Community Building",    bg:"rgba(46,196,182,0.08)", color:"var(--accent-teal)" },
   personal:      { icon:"🧠", name:"Personal Shifts",       bg:"rgba(155,114,240,0.08)",color:"var(--accent-violet)" },

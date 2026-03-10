@@ -4,25 +4,36 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Future — Operation: Save The Planet</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@300;400;500;700&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #050508;
-    --green-dark: #1a4a1a;
-    --green-mid: #2d7a2d;
-    --green-bright: #4ade80;
-    --green-neon: #00ff66;
-    --gold: #ffd700;
-    --red: #e63946;
-    --text: #e8e6e1;
-    --text-muted: #6b6b6b;
+    --bg-deep: #08080c;
+    --bg-mid: #0e0e14;
+    --text-primary: #e8e6e1;
+    --text-secondary: #a09da6;
+    --text-muted: #5a5760;
+    --accent-green: #4ade80;
+    --accent-teal: #2ec4b6;
+    --accent-gold: #ffd700;
+    --border: rgba(255,255,255,0.05);
+    --border-hover: rgba(255,255,255,0.12);
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    background: var(--bg);
-    color: var(--text);
+    background: var(--bg-deep);
+    color: var(--text-primary);
     font-family: 'DM Sans', sans-serif;
     overflow-x: hidden;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
   .top-header {
@@ -39,7 +50,7 @@
     border-bottom: 1px solid rgba(255,255,255,0.04);
   }
   .top-header a {
-    font-family: 'Oswald', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     font-weight: 500;
     font-size: 0.85rem;
     letter-spacing: 0.15em;
@@ -51,26 +62,71 @@
     border-bottom: 2px solid transparent;
   }
   .top-header a:hover {
-    color: var(--green-bright);
-    border-bottom-color: var(--green-bright);
+    color: var(--accent-green);
+    border-bottom-color: var(--accent-green);
   }
 
+  /* Knowledge dropdown */
+  .nav-dropdown { position: relative; }
+  .nav-dropdown-trigger {
+    font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 0.85rem;
+    letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted);
+    cursor: pointer; padding: 6px 0; border-bottom: 2px solid transparent;
+    transition: color 0.3s, border-color 0.3s; display: flex; align-items: center; gap: 4px;
+  }
+  .nav-dropdown-trigger::after { content: '▾'; font-size: 0.7em; opacity: 0.7; }
+  .nav-dropdown:hover .nav-dropdown-trigger, .nav-dropdown.active .nav-dropdown-trigger {
+    color: var(--accent-green); border-bottom-color: var(--accent-green);
+  }
+  .nav-dropdown-menu {
+    position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+    margin-top: 8px; min-width: 220px;
+    background: rgba(10,10,14,0.98); backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.06); border-radius: 8px;
+    padding: 8px 0; opacity: 0; visibility: hidden;
+    transition: opacity 0.2s, visibility 0.2s;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+  }
+  .nav-dropdown:hover .nav-dropdown-menu { opacity: 1; visibility: visible; }
+  .nav-dropdown-menu a {
+    display: block; padding: 10px 20px; font-size: 0.8rem;
+    letter-spacing: 0.1em; color: var(--text-muted); text-decoration: none;
+    border-bottom: none; transition: color 0.2s, background 0.2s;
+  }
+  .nav-dropdown-menu a:hover { color: var(--accent-green); background: rgba(74,222,128,0.08); }
+
+  /* Page header (matches actionables) */
   .page {
-    padding: 100px 24px 80px;
+    padding: 100px 48px 80px;
     max-width: 800px;
     margin: 0 auto;
+    position: relative;
+  }
+  .page::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 48px; right: 48px;
+    height: 2px;
+    background: linear-gradient(90deg, #2d7a2d, var(--accent-green), var(--accent-teal), var(--accent-gold));
   }
 
   .page-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(2.5rem, 8vw, 4.5rem);
-    letter-spacing: 0.04em;
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
     color: #fff;
     margin-bottom: 12px;
   }
-  .page-title .green { color: var(--green-neon); }
+  .page-title .green {
+    background: linear-gradient(135deg, var(--accent-green), var(--accent-teal));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
   .page-sub {
-    font-family: 'Oswald', sans-serif;
+    font-family: 'JetBrains Mono', monospace;
     font-weight: 300;
     font-size: 1rem;
     letter-spacing: 0.2em;
@@ -81,29 +137,30 @@
 
   .outcome-card {
     background: rgba(255,255,255,0.02);
-    border: 1px solid rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
     border-radius: 16px;
     padding: 32px 36px;
     margin-bottom: 24px;
-    border-left: 3px solid var(--green-bright);
+    border-left: 3px solid var(--accent-green);
     transition: border-color 0.3s, background 0.3s;
   }
   .outcome-card:hover {
     background: rgba(255,255,255,0.04);
-    border-left-color: var(--green-neon);
+    border-left-color: var(--accent-teal);
   }
   .outcome-number {
-    font-family: 'Oswald', sans-serif;
+    font-family: 'JetBrains Mono', monospace;
     font-weight: 700;
     font-size: 0.75rem;
     letter-spacing: 0.25em;
-    color: var(--green-bright);
+    color: var(--accent-green);
     margin-bottom: 12px;
   }
   .outcome-title {
-    font-family: 'Bebas Neue', sans-serif;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
     font-size: 1.6rem;
-    letter-spacing: 0.04em;
+    letter-spacing: -0.02em;
     color: #fff;
     margin-bottom: 12px;
     line-height: 1.2;
@@ -114,18 +171,24 @@
     line-height: 1.75;
     font-weight: 300;
   }
-  .outcome-desc strong { color: var(--text); font-weight: 500; }
+  .outcome-desc strong { color: var(--text-primary); font-weight: 500; }
 </style>
 </head>
 <body>
 
 <header class="top-header">
   <a href="index.html">Home</a>
-  <a href="timeline.html">Timeline</a>
-  <a href="todays-problems.html">Today's Problems</a>
-  <a href="actionables.html">Actionables</a>
-  <a href="culture.html">Culture</a>
+  <div class="nav-dropdown">
+    <span class="nav-dropdown-trigger">Knowledge</span>
+    <div class="nav-dropdown-menu">
+      <a href="timeline.html">History timeline</a>
+      <a href="todays-problems.html">Today's societal issues</a>
+      <a href="actionables.html">Actionables</a>
+      <a href="culture.html">Culture</a>
+    </div>
+  </div>
   <a href="future.html">Future</a>
+  <a href="philafolio.html">My Philafolio</a>
 </header>
 
 <main class="page">
