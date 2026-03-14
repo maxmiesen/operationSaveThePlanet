@@ -753,8 +753,8 @@
 <div class="loading-state" id="loadingState">
   <div class="loading-card">
     <div class="loading-icon">🔍</div>
-    <h3>Searching the web...</h3>
-    <p>AI is scanning news sites, organizer pages, and social media for upcoming events near <strong id="loadingCity"></strong></p>
+    <h3>Searching for events...</h3>
+    <p>Scanning news, Eventbrite, Mobilize, and national movements for upcoming events near <strong id="loadingCity"></strong></p>
     <div class="progress-track">
       <div class="progress-bar"></div>
     </div>
@@ -954,13 +954,28 @@
     return 'all';
   }
 
+  /* ─── PROXY FETCH WITH TIMEOUT ─── */
+  var PROXY = 'https://api.allorigins.win/raw?url=';
+
+  function fetchWithTimeout(url, ms) {
+    return new Promise(function(resolve, reject) {
+      var timer = setTimeout(function() { reject(new Error('Timeout')); }, ms);
+      fetch(url).then(function(r) {
+        clearTimeout(timer);
+        if (!r.ok) reject(new Error(r.status));
+        else r.text().then(resolve, reject);
+      }, function(e) { clearTimeout(timer); reject(e); });
+    });
+  }
+
+  async function proxyFetch(url) {
+    return await fetchWithTimeout(PROXY + encodeURIComponent(url), 8000);
+  }
+
   /* ─── RSS FEED FETCH ─── */
   async function fetchRSSFeed(query) {
     var rssUrl = 'https://news.google.com/rss/search?q=' + encodeURIComponent(query) + '&hl=en-US&gl=US&ceid=US:en';
-    var proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(rssUrl);
-    var resp = await fetch(proxyUrl);
-    if (!resp.ok) throw new Error('RSS fetch failed');
-    return await resp.text();
+    return await proxyFetch(rssUrl);
   }
 
   function parseRSSItems(xmlText) {
@@ -980,6 +995,71 @@
     return results;
   }
 
+  /* ─── EXTRACT FUTURE DATES FROM TEXT ─── */
+  var MONTH_NAMES = ['january','february','march','april','may','june','july','august','september','october','november','december'];
+  var MONTH_SHORT = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
+
+  function extractFutureDate(text) {
+    var now = new Date();
+    var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    var t = text.toLowerCase();
+
+    var patterns = [
+      /(\b(?:january|february|march|april|may|june|july|august|september|october|november|december)\s+\d{1,2}(?:st|nd|rd|th)?\s*,?\s*(?:2025|2026|2027)?)/gi,
+      /(\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\.?\s+\d{1,2}(?:st|nd|rd|th)?\s*,?\s*(?:2025|2026|2027)?)/gi,
+      /(\b\d{1,2}\/\d{1,2}\/(?:2025|2026|2027))/g
+    ];
+
+    for (var pi = 0; pi < patterns.length; pi++) {
+      var matches = text.match(patterns[pi]);
+      if (matches) {
+        for (var mi = 0; mi < matches.length; mi++) {
+          var cleaned = matches[mi].replace(/(st|nd|rd|th)/gi, '').trim();
+          var parsed = new Date(cleaned);
+          if (!isNaN(parsed.getTime())) {
+            if (parsed.getFullYear() < 2025) parsed.setFullYear(now.getFullYear());
+            if (parsed >= today) return parsed;
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  /* ─── SCORE & SORT RESULTS ─── */
+  function scoreEvent(ev) {
+    var score = 0;
+    var t = (ev.name + ' ' + ev.description).toLowerCase();
+    var now = new Date();
+
+    if (ev.mentionedDate && ev.mentionedDate >= now) score += 50;
+
+    var upcomingWords = /\b(upcoming|scheduled|planned|will be held|set for|join us|rsvp|sign up|register|taking place|this saturday|this sunday|this weekend|next week|save the date|mark your calendar|nationwide|day of action)\b/;
+    if (upcomingWords.test(t)) score += 30;
+
+    var namedMovements = /no kings|50501|hands off|people.s march|march for our lives|women.s march|climate strike|indivisible|moveon/i;
+    if (namedMovements.test(t)) score += 40;
+
+    var actionWords = /\b(rally|march|protest|demonstration|walkout|sit-in|vigil|strike|picket|gathering|mobilization|action)\b/g;
+    var actionMatches = t.match(actionWords);
+    if (actionMatches) score += actionMatches.length * 5;
+
+    if (ev.rawDate) {
+      var diffMs = ev.rawDate - now;
+      var diffDays = diffMs / (1000 * 60 * 60 * 24);
+      if (diffDays >= 0 && diffDays <= 7) score += 25;
+      else if (diffDays > 7 && diffDays <= 30) score += 15;
+      else if (diffDays > 30 && diffDays <= 90) score += 10;
+      else if (diffDays < 0 && diffDays >= -1) score += 10;
+      else if (diffDays < -1 && diffDays >= -7) score += 5;
+    }
+
+    var pastWords = /\b(arrested|was held|took place|gathered yesterday|ended|dispersed|were detained|clashed|sentenced)\b/;
+    if (pastWords.test(t)) score -= 25;
+
+    return score;
+  }
+
   /* ─── SEARCH ─── */
   window.searchProtests = async function() {
     var city = cityInput.value.trim();
@@ -996,50 +1076,78 @@
     updateUI();
 
     try {
+      var now = new Date();
+      var monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      var curMonth = monthNames[now.getMonth()];
+      var nextMonth = monthNames[(now.getMonth() + 1) % 12];
+      var year = now.getFullYear();
+
       var queries = [
-        city + ' protest rally march 2026',
-        city + ' demonstration activist event 2026',
-        city + ' workers strike union rally 2026'
+        city + ' upcoming protest rally march ' + curMonth + ' ' + year,
+        city + ' planned demonstration ' + nextMonth + ' ' + year,
+        '"No Kings" rally ' + city + ' ' + year,
+        city + ' "Hands Off" OR "50501" protest rally ' + year,
+        city + ' protest rally march mobilization upcoming ' + year
       ];
 
       var allItems = [];
       var seenTitles = {};
 
-      var results = await Promise.allSettled(queries.map(function(q) { return fetchRSSFeed(q); }));
-
-      results.forEach(function(r) {
-        if (r.status === 'fulfilled') {
-          var items = parseRSSItems(r.value);
-          items.forEach(function(item) {
-            var key = item.title.toLowerCase().slice(0, 60);
-            if (!seenTitles[key]) {
-              seenTitles[key] = true;
-              allItems.push(item);
-            }
-          });
-        }
-      });
-
-      if (allItems.length === 0) {
-        var fallbackXml = await fetchRSSFeed(city + ' protest OR rally OR march OR demonstration');
-        allItems = parseRSSItems(fallbackXml);
+      function addUnique(items) {
+        items.forEach(function(item) {
+          var key = item.title.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 50);
+          if (key.length > 3 && !seenTitles[key]) {
+            seenTitles[key] = true;
+            allItems.push(item);
+          }
+        });
       }
 
-      state.events = allItems.slice(0, 20).map(function(item) {
-        var d = item.pubDate ? new Date(item.pubDate) : null;
-        var dateStr = d ? d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }) : '';
-        return {
+      var allFetches = queries.map(function(q) {
+        return fetchRSSFeed(q).then(parseRSSItems).catch(function() { return []; });
+      });
+
+      var results = await Promise.all(allFetches);
+      results.forEach(addUnique);
+
+      if (allItems.length === 0) {
+        try {
+          var fallback = await fetchRSSFeed(city + ' protest OR rally OR march OR demonstration');
+          addUnique(parseRSSItems(fallback));
+        } catch(e) {}
+      }
+
+      state.events = allItems.map(function(item) {
+        var pubD = item.pubDate ? new Date(item.pubDate) : null;
+        if (pubD && isNaN(pubD.getTime())) pubD = null;
+
+        var fullText = item.title + ' ' + item.description + ' ' + (item.pubDate || '');
+        var mentionedDate = extractFutureDate(fullText);
+
+        var displayDate = mentionedDate || pubD;
+        var dateStr = displayDate
+          ? displayDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })
+          : '';
+
+        var ev = {
           name: item.title,
           date: dateStr,
-          rawDate: d,
+          rawDate: displayDate,
+          mentionedDate: mentionedDate,
           location: city,
           description: item.description || '',
           category: detectCategory(item.title + ' ' + item.description),
           time: '',
           organizer: item.source || '',
-          link: item.link
+          link: item.link,
+          isUpcoming: !!mentionedDate
         };
+        ev._score = scoreEvent(ev);
+        return ev;
       });
+
+      state.events.sort(function(a, b) { return b._score - a._score; });
+      state.events = state.events.slice(0, 30);
 
     } catch (err) {
       state.error = 'Failed to search. Please try again.';
@@ -1072,6 +1180,9 @@
     var html = '';
     html += '<div class="card-accent" style="background:linear-gradient(90deg,' + color + ',' + color + '88)"></div>';
     html += '<div class="card-body">';
+    if (event.isUpcoming) {
+      html += '<div style="margin-bottom:10px"><span style="display:inline-block;font-size:10px;font-weight:800;letter-spacing:1.5px;padding:3px 10px;border-radius:4px;background:#00B89422;color:#00B894;border:1px solid #00B89444;font-family:\'JetBrains Mono\',monospace">▲ UPCOMING</span></div>';
+    }
     html += '<div class="card-top">';
     html += '<span class="card-badge" style="color:' + color + ';background:' + color + '15">' + catObj.icon + ' ' + catObj.label + '</span>';
     if (event.date) html += '<span class="card-date">' + escapeHtml(event.date) + '</span>';
