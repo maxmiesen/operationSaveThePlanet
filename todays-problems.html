@@ -261,15 +261,6 @@
   }
 
   /* Individual sphere colors */
-  .sphere--porn {
-    --sphere-color: var(--accent-red);
-    background: radial-gradient(circle at 35% 35%, #3a1520, #1a0a10 70%);
-    box-shadow: 0 0 40px var(--glow-red), inset 0 0 30px rgba(230, 57, 70, 0.1);
-  }
-  .sphere-wrapper:hover .sphere--porn {
-    box-shadow: 0 0 70px var(--glow-red), 0 0 120px rgba(230, 57, 70, 0.15), inset 0 0 40px rgba(230, 57, 70, 0.15);
-  }
-
   .sphere--climate {
     --sphere-color: var(--accent-amber);
     background: radial-gradient(circle at 35% 35%, #3a2a10, #1a1508 70%);
@@ -343,7 +334,6 @@
   .sphere-wrapper:nth-child(4) .sphere { animation: float4 6.5s ease-in-out infinite; }
   .sphere-wrapper:nth-child(5) .sphere { animation: float5 7.5s ease-in-out infinite; }
   .sphere-wrapper:nth-child(6) .sphere { animation: float6 6.8s ease-in-out infinite; }
-  .sphere-wrapper:nth-child(7) .sphere { animation: float7 5.8s ease-in-out infinite; }
 
   /* Expanded panel (overlay) */
   .overlay {
@@ -460,10 +450,6 @@
   }
 
   /* Panel color accents */
-  .panel--porn .panel-subtitle { color: var(--accent-red); }
-  .panel--porn .panel-tag { background: rgba(230, 57, 70, 0.12); color: var(--accent-red); }
-  .panel--porn { border-color: rgba(230, 57, 70, 0.15); }
-
   .panel--climate .panel-subtitle { color: var(--accent-amber); }
   .panel--climate .panel-tag { background: rgba(244, 162, 97, 0.12); color: var(--accent-amber); }
   .panel--climate { border-color: rgba(244, 162, 97, 0.15); }
@@ -588,25 +574,6 @@
     line-height: 1.5;
     letter-spacing: 0.02em;
   }
-
-  .dopamine-compare {
-    margin: 20px 0;
-    padding: 20px;
-    background: rgba(255,255,255,0.02);
-    border-radius: 14px;
-    border: 1px solid rgba(255,255,255,0.04);
-  }
-  .dopamine-compare h4 {
-    font-family: 'Playfair Display', serif;
-    font-size: 1rem;
-    margin-bottom: 16px;
-    color: var(--text-primary);
-  }
-  .dopa-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-  .dopa-label { font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); width: 80px; flex-shrink: 0; text-align: right; }
-  .dopa-track { flex: 1; height: 14px; background: rgba(255,255,255,0.04); border-radius: 8px; overflow: hidden; }
-  .dopa-fill { height: 100%; border-radius: 8px; }
-  .dopa-val { font-size: 0.72rem; font-weight: 600; color: var(--text-primary); width: 50px; flex-shrink: 0; }
 
   /* ===== WEALTH DASHBOARD INSIDE PANEL ===== */
   .wealth-dashboard { margin-top: 20px; }
@@ -764,12 +731,6 @@
     50% { transform: translateY(-14px) rotate(-0.7deg); }
     80% { transform: translateY(4px) rotate(0.3deg); }
   }
-  @keyframes float7 {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    25% { transform: translateY(-10px) rotate(0.6deg); }
-    55% { transform: translateY(12px) rotate(-0.4deg); }
-    75% { transform: translateY(-8px) rotate(0.2deg); }
-  }
   @keyframes spinBorder {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
@@ -792,7 +753,6 @@
     <div class="nav-dropdown-menu">
       <a href="timeline.html">History timeline</a>
       <a href="todays-problems.html">Today's societal issues</a>
-      <a href="actionables.html">Actionables</a>
       <a href="culture.html">Culture</a>
     </div>
   </div>
@@ -807,13 +767,6 @@
   <p class="subtitle">The issues we cannot look away from. Click each sphere to explore further.</p>
 
   <div class="spheres-container">
-
-    <div class="sphere-wrapper" onclick="openPanel('porn')">
-      <div class="sphere sphere--porn">
-        <div class="sphere-inner"><span class="sphere-icon">🔗</span></div>
-      </div>
-      <span class="sphere-label">Pornography</span>
-    </div>
 
     <div class="sphere-wrapper" onclick="openPanel('climate')">
       <div class="sphere sphere--climate">
@@ -871,71 +824,6 @@
 
 <script>
 const panels = {
-  porn: {
-    icon: '🔗',
-    title: 'Pornography',
-    subtitle: 'The Hijacked Brain',
-    cls: 'panel--porn',
-    tag: 'Neuroscience & Public Health',
-    body: `<em>Dopamine — the brain's primary neurotransmitter for pleasure and reward — is released whenever a person experiences something pleasurable.</em> With pornography, the reward center is artificially activated through pixels on a screen, and with repetitive exposure, the brain's dopamine circuitry is fundamentally altered.<br><br>
-
-    <div class="dopamine-compare">
-      <h4>Dopamine Spike Comparison</h4>
-      <div class="dopa-row">
-        <span class="dopa-label">Baseline</span>
-        <div class="dopa-track"><div class="dopa-fill" style="width:40%; background: linear-gradient(90deg, #4a5568, #718096);"></div></div>
-        <span class="dopa-val">100%</span>
-      </div>
-      <div class="dopa-row">
-        <span class="dopa-label">Nicotine</span>
-        <div class="dopa-track"><div class="dopa-fill" style="width:80%; background: linear-gradient(90deg, #f4a261, #e87a20);"></div></div>
-        <span class="dopa-val">~200%</span>
-      </div>
-      <div class="dopa-row">
-        <span class="dopa-label">Porn</span>
-        <div class="dopa-track"><div class="dopa-fill" style="width:100%; background: linear-gradient(90deg, #e63946, #c0272f);"></div></div>
-        <span class="dopa-val">250%+</span>
-      </div>
-      <p style="font-size:0.72rem; color: var(--text-muted); margin-top:12px; opacity:0.7; line-height:1.6;">Nicotine raises dopamine to ~200% above baseline. Pornography elevates beyond 250% and sustains it for extended periods, compounding neurological impact. (<a href="https://pubmed.ncbi.nlm.nih.gov/21126735/" target="_blank" style="color:var(--accent-red);">Volkow et al., 2011</a>; <a href="https://pubmed.ncbi.nlm.nih.gov/24871471/" target="_blank" style="color:var(--accent-red);">Voon et al., 2014</a>)</p>
-    </div>
-
-    <em>Emotional regulation becomes increasingly difficult</em>, especially for individuals prone to addiction. The brain begins to require higher levels of stimulation to achieve the same dopamine response — a process known as tolerance — mirroring patterns seen in substance addiction. (<a href="https://pubmed.ncbi.nlm.nih.gov/25466233/" target="_blank" style="color:var(--accent-red);">Kühn & Gallinat, 2014, JAMA Psychiatry</a>)<br><br>
-
-    <em>Long-term effects on sexual maturation are significant.</em> Adolescents exposed to pornography during critical developmental windows show altered expectations around intimacy, consent, and sexual norms. Porn is readily available to the masses — any child with a phone has unrestricted access to an <em>entirely unregulated industry</em>.<br><br>
-
-    <div class="compare-block">
-      <h4>Violence in Pornography</h4>
-      <p style="font-size:0.85rem; color: var(--text-muted); line-height:1.7;">Research suggests that <em>between 1 in 3 and 9 in 10 pornographic scenes</em> contain violence or aggression, depending on the study and platform analyzed. (<a href="https://pubmed.ncbi.nlm.nih.gov/33174369/" target="_blank" style="color:var(--accent-red);">Fritz, N. et al., 2020</a>)</p>
-    </div>
-
-    <div class="stat-grid">
-      <div class="stat-card">
-        <div class="stat-num" style="color:var(--accent-red);">$15B–$97B</div>
-        <div class="stat-desc">Annual industry revenue — dwarfing the NFL, NBA, and MLB combined</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num" style="color:var(--accent-red);">250%+</div>
-        <div class="stat-desc">Dopamine elevation above baseline, sustained for hours</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num" style="color:var(--accent-red);">33–90%</div>
-        <div class="stat-desc">Of scenes containing violence or aggression</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num" style="color:var(--accent-red);">0</div>
-        <div class="stat-desc">Federal regulations governing the online pornography industry</div>
-      </div>
-    </div>
-
-    <br><em>A substantial economic force operating without oversight.</em> The pornography industry generates between $15 billion and $97 billion annually — a range reflecting how opaque this unregulated market truly is. For comparison, the NFL generates ~$18B, the NBA ~$10B, and MLB ~$11B. An industry potentially larger than all three combined operates with virtually zero regulatory framework.<br><br>
-
-    <em>The Solution:</em> Healthier alternatives are emerging. <a href="https://aphroditeaudios.vercel.app/science" target="_blank" style="color:var(--accent-red); font-weight:500;">Aphrodite Audios</a> offers an audio-based approach grounded in neuroscience — designed to foster genuine arousal and intimacy without the neurological damage of visual pornography.<br><br>
-
-    <a href="https://aphroditeaudios.vercel.app/science" target="_blank" class="source-link">🔬 Aphrodite Audios — The Science</a>
-    <a href="https://pubmed.ncbi.nlm.nih.gov/25466233/" target="_blank" class="source-link">📄 Kühn & Gallinat, 2014</a>
-    <a href="https://pubmed.ncbi.nlm.nih.gov/24871471/" target="_blank" class="source-link">📄 Voon et al., 2014</a>
-    <a href="https://pubmed.ncbi.nlm.nih.gov/33174369/" target="_blank" class="source-link">📄 Fritz et al., 2020</a>`
-  },
   climate: {
     icon: '🔥',
     title: 'Climate Change',

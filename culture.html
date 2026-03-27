@@ -94,10 +94,10 @@
   }
   .nav-dropdown-menu a:hover { color: var(--accent-green); background: rgba(74,222,128,0.08); }
 
-  /* Page header (matches actionables) */
+  /* Page header */
   .page {
     padding: 100px 48px 80px;
-    max-width: 900px;
+    max-width: 1000px;
     margin: 0 auto;
     position: relative;
   }
@@ -125,6 +125,25 @@
     background-clip: text;
   }
 
+  .page-lead {
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    line-height: 1.75;
+    font-weight: 300;
+    max-width: 760px;
+    margin: -28px 0 48px;
+  }
+  .page-lead strong { color: var(--text-primary); font-weight: 500; }
+  .section-blurb {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    font-weight: 300;
+    max-width: 720px;
+    margin: -8px 0 20px;
+  }
+  .section-blurb strong { color: var(--text-primary); font-weight: 500; }
+
   .culture-section {
     margin-bottom: 48px;
   }
@@ -141,15 +160,15 @@
 
   .culture-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 14px;
   }
 
   .culture-item {
     background: rgba(255,255,255,0.02);
     border: 1px solid var(--border);
     border-radius: 12px;
-    padding: 20px;
+    padding: 22px 20px;
     transition: border-color 0.3s, background 0.3s;
   }
   .culture-item:hover {
@@ -158,13 +177,25 @@
   }
   .culture-item-title {
     font-family: 'Playfair Display', serif;
-    font-size: 1.2rem;
-    letter-spacing: 0.04em;
+    font-size: 1.15rem;
+    letter-spacing: 0.02em;
     color: #fff;
+    line-height: 1.25;
+    display: block;
+  }
+  .culture-item-desc {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-top: 10px;
+    font-weight: 300;
   }
 
   .culture-section.standalone .culture-grid {
     grid-template-columns: 1fr;
+  }
+  .culture-section.wide-items .culture-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   }
 </style>
 </head>
@@ -177,7 +208,6 @@
     <div class="nav-dropdown-menu">
       <a href="timeline.html">History timeline</a>
       <a href="todays-problems.html">Today's societal issues</a>
-      <a href="actionables.html">Actionables</a>
       <a href="culture.html">Culture</a>
     </div>
   </div>
@@ -186,25 +216,148 @@
 
 <main class="page">
   <h1 class="page-title">Culture</h1>
+  <p class="page-lead">Culture is how people <strong>make meaning together</strong> — through language, ceremony, food, music, faith, and shared history. No single page can capture every community; the goal here is to honor breadth and remind us that dignity, safety, and representation belong to <strong>all</strong> identities and traditions.</p>
 
   <section class="culture-section">
-    <div class="section-label">Ethnicities</div>
+    <div class="section-label">Heritage &amp; ethnic communities</div>
     <div class="culture-grid">
-      <div class="culture-item"><span class="culture-item-title">Black culture</span></div>
-      <div class="culture-item"><span class="culture-item-title">Asian culture</span></div>
-      <div class="culture-item"><span class="culture-item-title">Middle Eastern culture</span></div>
-      <div class="culture-item"><span class="culture-item-title">White culture</span></div>
-      <div class="culture-item"><span class="culture-item-title">Native American culture</span></div>
-      <div class="culture-item"><span class="culture-item-title">LatinX culture</span></div>
+      <div class="culture-item">
+        <span class="culture-item-title">Black &amp; African diaspora</span>
+        <p class="culture-item-desc">From the Deep South to the Caribbean, Africa, and urban centers worldwide — literature, music, faith traditions, and movements for liberation.</p>
+      </div>
+      <div class="culture-item">
+        <span class="culture-item-title">Asian &amp; Asian American</span>
+        <p class="culture-item-desc">East, Southeast, South, and Central Asian roots — each region carries distinct languages, diaspora stories, and cross-cutting solidarity against exclusion.</p>
+      </div>
+      <div class="culture-item">
+        <span class="culture-item-title">Middle Eastern &amp; North African</span>
+        <p class="culture-item-desc">Arab, Persian, Kurdish, Amazigh, Assyrian, and many more — bridging faiths, cuisines, and histories often flattened by Western media.</p>
+      </div>
+      <div class="culture-item">
+        <span class="culture-item-title">Latine &amp; Latin American</span>
+        <p class="culture-item-desc">Indigenous, African, and European ancestries woven across hemispheres — from borderlands to global cities, in many languages.</p>
+      </div>
+      <div class="culture-item">
+        <span class="culture-item-title">Native American, Alaska Native &amp; Native Hawaiian</span>
+        <p class="culture-item-desc">Sovereign nations and island communities; languages, governance, and land stewardship older than the United States itself.</p>
+      </div>
+      <div class="culture-item">
+        <span class="culture-item-title">Pacific Islander &amp; Oceania</span>
+        <p class="culture-item-desc">Polynesian, Micronesian, and Melanesian peoples — navigation, oral tradition, and resilience against climate and colonization.</p>
+      </div>
+      <div class="culture-item">
+        <span class="culture-item-title">European diasporas</span>
+        <p class="culture-item-desc">Irish, Italian, Eastern European, Nordic, and others — migration stories, labor history, and ethnic neighborhoods that shaped America.</p>
+      </div>
+      <div class="culture-item">
+        <span class="culture-item-title">Multiracial &amp; mixed heritage</span>
+        <p class="culture-item-desc">Families and individuals who bridge categories — often forging new vocabularies of belonging where official forms fall short.</p>
+      </div>
+      <div class="culture-item">
+        <span class="culture-item-title">Jewish communities</span>
+        <p class="culture-item-desc">Ethnic and religious diversity within Judaism — Ashkenazi, Sephardi, Mizrahi, and more; culture tied to history, ritual, and mutual aid.</p>
+      </div>
+      <div class="culture-item">
+        <span class="culture-item-title">Roma &amp; Traveller peoples</span>
+        <p class="culture-item-desc">Often marginalized in Europe and the U.S. — music, language, and kinship networks with long histories of resilience.</p>
+      </div>
     </div>
   </section>
 
-  <section class="culture-section standalone">
-    <div class="section-label">Identity & Community</div>
+  <section class="culture-section wide-items">
+    <div class="section-label">Identity, belonging &amp; lived community</div>
     <div class="culture-grid">
-      <div class="culture-item"><span class="culture-item-title">Woman Power and female culture</span></div>
-      <div class="culture-item"><span class="culture-item-title">Alt culture</span></div>
-      <div class="culture-item"><span class="culture-item-title">Pride culture</span></div>
+      <div class="culture-item">
+        <span class="culture-item-title">Women’s &amp; femme-led spaces</span>
+        <p class="culture-item-desc">Feminist organizing, care networks, and creative worlds where leadership, safety, and joy are centered outside patriarchal norms.</p>
+      </div>
+      <div class="culture-item">
+        <span class="culture-item-title">LGBTQ+ &amp; Pride culture</span>
+        <p class="culture-item-desc">Chosen family, protest aesthetics, ballroom, and everyday visibility — culture forged in both celebration and survival.</p>
+      </div>
+      <div class="culture-item">
+        <span class="culture-item-title">Alternative &amp; subcultures</span>
+        <p class="culture-item-desc">Punk, goth, scene, ska, electronic, and hybrid aesthetics — DIY ethics, zines, venues, and communities that question the mainstream.</p>
+      </div>
+      <div class="culture-item">
+        <span class="culture-item-title">Disability culture</span>
+        <p class="culture-item-desc">Deaf pride, neurodivergent community, adaptive design, and the social model of disability — identity as shared strength, not charity case.</p>
+      </div>
+      <div class="culture-item">
+        <span class="culture-item-title">Immigrant &amp; refugee communities</span>
+        <p class="culture-item-desc">Language schools, religious and secular mutual aid, remittance economies, and the art of rebuilding home in a new place.</p>
+      </div>
+      <div class="culture-item">
+        <span class="culture-item-title">Multilingual &amp; heritage-language</span>
+        <p class="culture-item-desc">Households and schools keeping tongues alive — resistance to assimilation-only models and bridges across generations.</p>
+      </div>
+      <div class="culture-item">
+        <span class="culture-item-title">Rural, small-town &amp; regional</span>
+        <p class="culture-item-desc">Agriculture, folk practice, local dialects, and tight-knit networks too often stereotyped instead of listened to.</p>
+      </div>
+      <div class="culture-item">
+        <span class="culture-item-title">Urban neighborhoods</span>
+        <p class="culture-item-desc">Block associations, street festivals, corner economies — culture built in density, often threatened by displacement.</p>
+      </div>
+      <div class="culture-item">
+        <span class="culture-item-title">Class &amp; labor</span>
+        <p class="culture-item-desc">Union halls, cooperative workplaces, and working-class aesthetics — culture shaped by shift work, migration for jobs, and collective bargaining.</p>
+      </div>
+      <div class="culture-item">
+        <span class="culture-item-title">Veterans &amp; military-adjacent families</span>
+        <p class="culture-item-desc">Shared sacrifice, reintegration stories, and cultures of service that deserve healthcare and honesty about foreign policy.</p>
+      </div>
+      <div class="culture-item">
+        <span class="culture-item-title">Youth &amp; intergenerational</span>
+        <p class="culture-item-desc">School clubs, elders’ circles, and movements where young organizers learn from those who came before — and teach back.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="culture-section wide-items">
+    <div class="section-label">Faith &amp; spiritual communities</div>
+    <p class="section-blurb">Religious and spiritual life is both deeply personal and inherently communal. Pluralism means <strong>freedom of belief and freedom from coercion</strong> — including for those who are secular, questioning, or spiritual-but-not-religious.</p>
+    <div class="culture-grid">
+      <div class="culture-item">
+        <span class="culture-item-title">Christianity — many traditions</span>
+        <p class="culture-item-desc">Black church, Catholic, Protestant, Orthodox, Pentecostal, and independent congregations — worship, hymnody, service, and moral languages that shape civic life.</p>
+      </div>
+      <div class="culture-item">
+        <span class="culture-item-title">Islam</span>
+        <p class="culture-item-desc">Sunni, Shia, Sufi, and culturally specific masjids — Ramadan, hospitality, scholarship, and solidarity against Islamophobia.</p>
+      </div>
+      <div class="culture-item">
+        <span class="culture-item-title">Judaism</span>
+        <p class="culture-item-desc">Reform, Conservative, Orthodox, Reconstructionist, secular Jewish identity — calendar, text study, and communal obligation (<em>tzedek</em> / justice).</p>
+      </div>
+      <div class="culture-item">
+        <span class="culture-item-title">Hindu, Buddhist, Sikh &amp; Jain communities</span>
+        <p class="culture-item-desc">Temples, gurdwaras, meditation centers, and festival seasons — diaspora innovation while maintaining ties to South and Southeast Asia.</p>
+      </div>
+      <div class="culture-item">
+        <span class="culture-item-title">Indigenous ceremonial &amp; spiritual life</span>
+        <p class="culture-item-desc">Protected as sovereign practice — not monolith, but nations and peoples with distinct ceremonies, languages, and relations to land and ancestors.</p>
+      </div>
+      <div class="culture-item">
+        <span class="culture-item-title">Baha’i, Druze, Yezidi &amp; smaller communities</span>
+        <p class="culture-item-desc">World religions and ethnoreligious groups with global diasporas — often underrepresented in public conversation despite rich contributions.</p>
+      </div>
+      <div class="culture-item">
+        <span class="culture-item-title">Unitarian Universalist &amp; pluralist chapels</span>
+        <p class="culture-item-desc">Spaces that convene across belief — covenant, service projects, and the work of disagreement without dehumanization.</p>
+      </div>
+      <div class="culture-item">
+        <span class="culture-item-title">Pagan &amp; earth-centered traditions</span>
+        <p class="culture-item-desc">Wiccan, Druidic, Heathen, and localized nature spirituality — practiced with care not to mimic or steal from closed Indigenous ceremonies.</p>
+      </div>
+      <div class="culture-item">
+        <span class="culture-item-title">Humanist, atheist &amp; ethical assemblies</span>
+        <p class="culture-item-desc">Secular community for weddings, grief, education, and morality without supernatural claims — full citizenship in a plural society.</p>
+      </div>
+      <div class="culture-item">
+        <span class="culture-item-title">Interfaith &amp; multifaith coalitions</span>
+        <p class="culture-item-desc">Housing the unhoused, refugee resettlement, climate action, and civil rights — shared work across theological difference.</p>
+      </div>
     </div>
   </section>
 </main>
